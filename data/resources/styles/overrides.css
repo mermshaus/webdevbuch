@@ -1,0 +1,22 @@
+/*
+body {
+    max-width: 40em;
+    padding: 0 1em 3em;
+    margin: 0 auto;
+    font: 1em/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #222;
+    background: #fff;
+}
+
+a {
+    color: red;
+}
+
+a:visited {
+    color: gray;
+}
+*/
+
+a:visited {
+    color: FireBrick;
+}

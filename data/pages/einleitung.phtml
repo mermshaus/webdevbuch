@@ -1,0 +1,29 @@
+<?php
+
+$title = 'Einleitung';
+
+?>
+
+<h1>Einleitung</h1>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>Client und Server</h2>
+
+<p>Jeder Datenaustausch im Web basiert auf der Verteilung der Rollen von <i>Client</i> und <i>Server</i>. Der Client ist diejenige Stelle, die eine <i>Anfrage</i> abschickt. Der Server, ist diejenige Stelle, die diese Anfrage annimmt, verarbeitet und eine <i>Antwort</i> zurück an den Client sendet.</p>
+
+<p>Anfragen und Antworten sind Datenpakete, die den Regeln eines bestimmten <i>Protokolls</i> entsprechend formatiert sind. In einem Protokoll ist definiert, wie ausgetauschte Datenpakete aufgebaut sein müssen, damit beteiligte Stellen sie korrekt auswerten können. Das <i>Hypertext Transfer Protocol</i> (<abbr>HTTP</abbr>) ist das Protokoll, das den Datenaustasch im Web regelt.</p>
+
+<p>Beim Aufruf einer Webseite in einem Browser findet die Kommunikation über das <abbr>HTTP</abbr> statt. Der Rechner, auf dem der Browser ausgeführt wird, übernimmt die Rolle des Clients und der Rechner, auf dem die nachgefragte Webseite gespeichert ist, übernimmt die Rolle des Servers.</p>
+
+<p>Der Browser erzeugt eine <abbr>HTTP</abbr>-Anfrage, also ein nach bestimmten Regeln formatiertes Datenpaket, in dem unter anderem die Adresse der abzurufenden Webseite enthalten ist. Dieses Paket wird an den Server geschickt. Der Serverrechner nimmt die Anfrage in Empfang und ermittelt anhand der mitgelieferten Adresse die gewünschten Daten. In diesem Fall ist das der Quelltext der nachgefragten Webseite. Diese Daten werden nun als <abbr>HTTP</abbr>-Antwort formatiert und zurück an den Client geschickt.</p>
+
+<p>Auf dem Clientrechner nimmt der Browser das Datenpaket entgegen, analysiert es gemäß den Regeln des <abbr>HTTP</abbr> und stellt die grafische Repräsentation des zurückgelieferten Quelltexts in seinem Anzeigebereich dar.</p>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>Das HTTP-Protokoll</h2>

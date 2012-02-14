@@ -1,0 +1,120 @@
+<?php
+
+$title = 'SQL';
+
+?>
+
+<h1>SQL</h1>
+
+<h2>Joins</h2>
+
+<pre><code>SELECT
+        b.`name`
+FROM
+        `tabelle1` AS a
+LEFT JOIN
+        `tabelle2` AS b
+    ON
+        a.`userid` = b.`userid`</code></pre>
+
+<p>LEFT JOIN gibt eine Ergebnismenge zurück, die jede Zeile aus der Ausgangstabelle enthält (egal, ob die ON-Bedingung für manche Zeilen der Ausgangstabelle nicht zutrifft).</p>
+
+<p>RIGHT JOIN gibt eine Ergebnismenge zurück, die jede Zeile aus der hinzugefügten Tabelle enthält. Das lässt sich dann oft zu einem LEFT JOIN umdrehen, indem die Tabellen vertauscht werden.</p>
+
+<p>INNER JOIN gibt nur die Zeilen zurück, bei denen die ON-Bedingung zutrifft.</p>
+
+<p>Das klingt kompliziert, ist aber eigentlich recht einfach.</p>
+
+<p>Tabelle user:</p>
+
+<pre><code> id | name
+----+------
+  1 | Bob
+  2 | Tom
+  3 | Mia</code></pre>
+
+<p>Tabelle post:</p>
+
+<pre><code> id | user_id | content
+----+---------+---------
+  1 |       2 | ...
+  2 |       2 | ...
+  3 |    null | ...</code></pre>
+
+<h3>Left Join</h3>
+
+<pre><code>SELECT
+        u.`id`,
+        u.`name`,
+        p.`id`,
+        p.`content`
+FROM
+        `post` AS p
+LEFT JOIN
+        `user` AS u
+    ON
+        p.`user_id` = u.`id`
+
+ u.id | u.name | p.id | p.content
+------+--------+------+-----------
+    2 |    Tom |    1 | ...
+    2 |    Tom |    2 | ...
+ null |   null |    3 | ...</code></pre>
+
+<p>Die Ergebnismenge enthält jeden Post.</p>
+
+<h3>Right Join</h3>
+
+<pre><code>SELECT
+        u.`id`,
+        u.`name`,
+        p.`id`,
+        p.`content`
+FROM
+        `post` AS p
+RIGHT JOIN
+        `user` AS u
+    ON
+        p.`user_id` = u.`id`
+
+ u.id | u.name | p.id | p.content
+------+--------+------+-----------
+    1 |    Bob | null | null
+    2 |    Tom |    1 | ...
+    2 |    Tom |    2 | ...
+    3 |    Mia | null | null</code></pre>
+
+<p>Die Ergebnismenge enthält jeden User.</p>
+
+<h3>Inner Join</h3>
+
+<pre><code>SELECT
+        u.`id`,
+        u.`name`,
+        p.`id`,
+        p.`content`
+FROM
+        `post` AS p
+INNER JOIN
+        `user` AS u
+    ON
+        p.`user_id` = u.`id`
+
+ u.id | u.name | p.id | p.content
+------+--------+------+-----------
+    2 |    Tom |    1 | ...
+    2 |    Tom |    2 | ...</code></pre>
+
+<p>Die Ergebnismenge enthält nur Einträge, für die die ON-Bedingung sauber erfüllt ist.</p>
+
+<p>Da etwas wie die null bei der user_id von Post #3 in einem intakten Schema in vielen Fällen nicht auftaucht, ist der LEFT JOIN häufig identisch zum INNER JOIN.</p>
+
+
+
+<h2>Ressourcen</h2>
+
+<ul>
+<li><a href="http://v.hdm-stuttgart.de/~riekert/lehre/db-kelz/">http://v.hdm-stuttgart.de/~riekert/lehre/db-kelz/</a></li>
+<li><a href="http://www.artfulsoftware.com/infotree/queries.php">http://www.artfulsoftware.com/infotree/queries.php</a></li>
+<li><a href="http://use-the-index-luke.com/">Use The Index, Luke!</a></li>
+</ul>

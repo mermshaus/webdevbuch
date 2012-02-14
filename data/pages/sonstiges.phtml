@@ -1,0 +1,158 @@
+<?php
+
+$title = 'Sonstiges';
+
+?>
+
+<h1>Sonstiges</h1>
+
+
+
+<h2>Standardantworten</h2>
+
+<h3 id="crossposting">Crossposting</h3>
+
+<p>Anscheinend hast du deine Frage auch in einem anderen Forum gestellt. Das empfinden viele Helfer als unfair, da sie oft unnötig Lösungsansätze posten, die bereits im anderen Forum gepostet wurden.</p>
+
+<h3 id="java">Java ist nicht JavaScript</h3>
+
+<h3 id="doctype">Fehlender DOCTYPE</h3>
+
+
+
+<h2>Wichtig</h2>
+
+<ul>
+<li><a href="http://wiki.selfhtml.org/wiki/Artikel:Kontextwechsel">http://wiki.selfhtml.org/wiki/Artikel:Kontextwechsel</a></li>
+</ul>
+
+
+
+<h2>Organisatorisches</h2>
+
+<ul>
+<li><a href="http://www.php.de/off-topic-diskussionen/80374-wie-antwortet-man-einem-forum-korrekt.html">Wie antwortet man in einem Forum?</a></li>
+</ul>
+
+
+
+<h2>Other FAQs</h2>
+
+<h3>Links</h3>
+
+<ul>
+<li><a href="http://xhtmlforum.de/40267-faq-h-ufig-gestellte-fragen-und.html">http://xhtmlforum.de/40267-faq-h-ufig-gestellte-fragen-und.html</a></li>
+</ul>
+
+
+
+<h2>Internationalisierung</h2>
+
+<h3>Zeichensatz</h3>
+
+<p>Der <i>Zeichensatz</i> einer Webseite sagt den Programmen, die die Webseite anzeigen (Browser meist), welcher Zeichensatz von der Webseite verwendet wird. Das heißt, du musst zunächst wissen, in welchem Zeichensatz das von dir verwendete Programm die Texte in deiner Webseite speichert. Meist kann man das auch beeinflussen/umstellen. Solltest Du eine Datenbank verwenden, sollte diese auch in demselben Zeichensatz arbeiten wie die Webseite.</p>
+
+<p>Die Entscheidung, welcher Zeichensatz der richtige ist, ist immer dir überlassen. Bei deutschen, englischen oder spanischen Seiten kann die Entscheidung noch leicht sein. Jedoch empfiehlt es sich heutzutage, immer <abbr title="8-bit Universal Character Set Transformation Format">UTF-8</abbr> als Zeichensatz zu verwenden, da dieser Zeichensatz auch Russisch und viele andere Sprachen ermöglicht.</p>
+
+<p>Hinweis: Der Zeichensatz einer Webseite, die auf einem Server liegt und per HTTP erreichbar ist, wird nicht einzig durch diesen Meta-Tag bestimmt. Der Server selbst liefert im Header auch einen Zeichensatz mit, der für Browser Vorrang hat. Bei Problemen mit der Darstellung von Zeichen, sollte deshalb zuerst der tatsächliche Zeichensatz ermittelt werden, in dem die Client-Anwendung die Seite interpretiert (z. B. bei Firefox: Rechtsklick in die Seite → Seiteneigenschaften).</p>
+
+<h3>Dateikodierung</h3>
+
+<p>Bei Seiten, die von einem Server geladen werden, ist die Kodierungsangabe im HTTP Header entscheidend, die Meta-Angabe im Dokument wird ignoriert. Sie wird nur dann benutzt, wenn die Datei lokal von der Festplatte geöffnet wird oder wenn der Server keine entsprechende Angabe mitschickt.</p>
+
+<p>Eingestellt wird die Standardkodierung in der Serverkonfiguration. Sie kann zum Beispiel im Firefox mit diversen Addons wie Firebug oder HTTP Live Headers, aber auch über den Kontextmenüeintrag „Seiteniformation anzeigen“ eingesehen werden.</p>
+
+<p>Heutzutage wird meistens UTF-8 empfohlen, da sich in diesem Zeichensatz alle Zeichen darstellen lassen. Es spricht aber nichts dagegen, wenn etwa nur deutsche Sonderzeichen verwendet werden, einen Zeichensatz der Familie ISO-8859 zu benutzen. Wobei dort auf Sonderfälle wie das €-Zeichen geachtet werden muss, das zum Beispiel in ISO-8859-1 nicht vorkommt.</p>
+
+<h3>A</h3>
+
+<p>Der Meta-Tag wird von etwaigen Servereinstellungen überschrieben. Das ist eine sehr häufige Fehlerquelle, weil das nicht unbedingt offensichtlich ist. Man denkt, man hätte die Seite korrekt per meta-Tag auf UTF-8 umgestellt, aber trotzdem bleibt die Darstellung fehlerhaft, weil der Content-Type-Header des Servers das Charset beispielsweise mit ISO-8859-1 überschreibt.</p>
+
+<p>Gut ist, beides zu setzen. (Vielleicht ist der meta-Tag sogar vorgeschrieben, das weiß ich gerade nicht.) Für die Darstellung im Web ist in der Regel der Content-Type-Header entscheidend.</p>
+
+<p><code>header()</code> in PHP und Einstellungen in der .htaccess-Datei verändern beide denselben Wert, nämlich den Header der HTTP-Response, mit der eine Seite an den Client übermittelt wird.</p>
+
+<p>Durch die Einstellungen in der .htaccess-Datei könnte höchstens noch zusätzlich erreicht werden, dass Nicht-PHP-Seiten (zum Beispiel eine direkt per URL angewählte .txt-Datei) auch mit dem richtigen Charset ausgeliefert werden. Dort steht die <code>header()</code>-Funktion ja logischerweise nicht zur Verfügung.</p>
+
+<h3>Links</h3>
+
+<ul>
+<li><a href="http://www.w3.org/International/tutorials/tutorial-char-enc/">http://www.w3.org/International/tutorials/tutorial-char-enc/</a></li>
+<li><a href="http://www.w3.org/International/questions/qa-htaccess-charset">http://www.w3.org/International/questions/qa-htaccess-charset</a></li>
+<li><a href="http://www.joelonsoftware.com/articles/Unicode.html">http://www.joelonsoftware.com/articles/Unicode.html</a></li>
+<li><a href="http://de.selfhtml.org/inter/index.htm">http://de.selfhtml.org/inter/index.htm</a></li>
+</ul>
+
+<p><strong>Nützliche Tools</strong></p>
+
+<ul>
+<li><a href="http//qa-dev.:w3.org/i18n-checker/">http://qa-dev.w3.org/i18n-checker/</a></li>
+<li><a href="http://rishida.net/tools/conversion/">http://rishida.net/tools/conversion/</a></li>
+</ul>
+
+
+
+<h2>Sicherheit von Webanwendungen</h2>
+
+<h3>Einleitung</h3>
+
+<p>Die meisten Angriffsmethoden zielen nicht darauf ab, ein Passwort zu "erraten", sondern auf andere Weise Zugriff (auf Server, Datenbank oder auch nur ein Login) zu bekommen. Das heißt zum Beispiel, bei einem Formular Felder nicht mitzusenden oder Felder als Arrays zu senden, die eigentlich keine Arrays sein sollten, um die Backend-Programmierung zu verwirren und so vielleicht Hinweise auf Angriffspunkte zu erhalten. Oder auf gut Glück Dateien wie "config.ini" oder ähnliche abzufragen, die eventuell von Außen erreichbar sind (Fehler in der Serverkonfiguration/-handhabung ausnutzen). Alle Daten, die vom Benutzer kommen, sind zudem beliebig manipulierbar. Das gilt vor allem für GET-, POST- und COOKIE-Felder. SESSION-Werte sind grundsätzlich als sicher anzusehen, da der Benutzer dort nur die Session-ID, die lokal im Cookie gespeichert wird, verändern kann.</p>
+
+<p>(Es gibt ein paar Angriffsversuche auf Sessions, aber bei denen müssen in der Regel so viele Voraussetzungen gegeben sein, dass sie eher unrealistisch sind.)</p>
+
+<p>Die häufigsten Angriffsarten sind:</p>
+
+<ul>
+<li><a href="http://de.wikipedia.org/wiki/SQL-Injection">SQL-Injection</a> (siehe dazu auch: Gefahren von <a href="http://www.mc2design.com/blog/php_self-safe-alternatives">PHP_SELF</a>)</li>
+
+<li><a href="http://de.wikipedia.org/wiki/Cross-Site_Scripting">Cross-Site Scripting</a></li>
+</ul>
+
+<p>Bei PHP kommen ab und an noch Probleme mit "register globals" hinzu.</p>
+
+<ul>
+<li><a href="http://php.net/manual/en/security.globals.php">PHP: Using Register Globals - Manual</a></li>
+</ul>
+
+<p>Schön sind auch Dateiuploads, die das Hochladen von &#42;.php-Dateien ermöglichen, die dann unter Umständen ausführbar sind, falls sie direkt über das Web aufgerufen werden können.</p>
+
+<h3>Speichern von Passwörtern</h3>
+
+<p>Sicherheit ist ein komplexes Thema. Kleines Beispiel: Mein Passwort lautet „apfel“. Wenn ich das mit MD5 hashe, bekomme ich als Hash „f9961ecb53c5204496032f79774ee057“.</p>
+
+<p>Sieht auf den ersten Blick sicher aus, nur ist MD5 ein so verbreitetes Verfahren, dass riesige Datenbanken (Rainbow Table) existieren, die einen Hash in den „Originalwert zurückrechnen“.</p>
+
+<p>Demo:</p>
+
+<p><a href="http://md5.gromweb.com/?md5=f9961ecb53c5204496032f79774ee057">http://md5.gromweb.com/?md5=f9961ecb53c5204496032f79774ee057</a></p>
+
+<ul>
+<li><a href="http://de.wikipedia.org/wiki/Rainbow_Table">Rainbow Table</a></li>
+</ul>
+
+<p>Das ist gerade bei kurzen, „lesbaren“ Passwörtern ein Problem.</p>
+
+<p>Abhilfe schafft es, das Passwort künstlich zu verlängern.</p>
+
+<ul>
+<li><a href="http://de.wikipedia.org/wiki/Salt_%28Kryptologie%29">Salt (Kryptologie)</a></li>
+</ul>
+
+<p>Ich schicke nicht „apfel“ sondern „schwuppdiwupp“ + „apfel“ durch die Hash-Funktion. Die Rainbow-Table-Datenbank müsste nun einen Eintrag für „schwuppdiwuppapfel“ enthalten, was aufgrund der Länge dieses Strings unwahrscheinlich ist.</p>
+
+<p>Ein Angreifer, der diesen „schwuppdiwupp“-String kennt, kann jetzt aber hergehen und sich eine eigene Rainbow Table erstellen, die nicht die eigentlichen Wörter enthält, sondern jeweils „schwuppdiwupp“ + $eigentlichesWort.</p>
+
+<p>Das dauert zwar eine Weile, ist aber bei einem Verfahren wie MD5 technisch auch auf einem normalen Heim-PC problemlos machbar. Wir reden hier eher von Stunden/Tagen als von Wochen.</p>
+
+<p>Der nächste Ansatz ist es, einen dynamischen Salt zu verwenden, also für den einen Nutzer „schwuppdiwupp“, für den nächsten „bibabubbobbeb“. Ein Angreifer müsste dann für jeden Nutzer eine eigene Rainbow Table erstellen, was dann nicht einmal Stunden/Tage dauert, sondern für jeden Nutzer diese Zeit.</p>
+
+<p>Das ist es, was gemeinhin genutzt wird. Zusätzlich zu Nutzername legst du für jeden Nutzer ein Feld „Salt“ an und speicherst das Passwort als Hash von $salt + $passwort. Beim Login würdest du dann nachsehen, ob der Nutzername in deiner Datenbank/XML-Datei existiert, den entsprechenden Hash aus $salt + $eingegebenesPasswort bilden und überprüfen, ob dieser String identisch mit dem ist, was für den Nutzer als $passwortHash hinterlegt ist.</p>
+
+<p>Zusätzlich dazu gibt es noch den Ansatz, die Hash-Funktion nicht einmal, sondern 100- oder 1000-mal auf die Eingabe anzuwenden. Die Idee dahinter ist wiederum, dass das Generieren einer Rainbow Table in die Länge gezogen wird.</p>
+
+<p>Interessante Diskussion: <a href="http://www.phpgangsta.de/passwortrichtlinien-was-tun-und-was-nicht">http://www.phpgangsta.de/passwortrichtlinien-was-tun-und-was-nicht</a></p>
+
+<ul>
+<li><a href="http://www.heise.de/security/artikel/Passwoerter-unknackbar-speichern-1253931.html">http://www.heise.de/security/artikel/Passwoerter-unknackbar-speichern-1253931.html</a></li>
+</ul>
+

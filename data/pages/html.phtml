@@ -1,0 +1,73 @@
+<?php
+
+$title = 'HTML';
+
+?>
+
+<h1>HTML</h1>
+
+<p>Die <i>Hypertext Markup Language</i> (<abbr>HTML</abbr>) dient zur semantischen Auszeichnung von Textdokumenten. Sie ist das Standardformat zur Definition von Webseiten.</p>
+
+<ul>
+<li><a href="http://www.w3.org/TR/html-markup/">HTML Working Draft</a></li>
+<li><a href="http://www.w3.org/TR/html5/">HTML5 Working Draft</a></li>
+<li><a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0 Recommendation</a></li>
+<li><a href="http://www.w3.org/TR/html401/">HTML 4.01 Recommendation</a></li>
+<li><a href="http://validator.w3.org/">The W3C Markup Validation Service</a>. Ein Online-Tool zur Validierung von HTML-Code.</li>
+</ul>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2 id="semantik">Was ist Semantik?</h2>
+<p class="c">Zum Unterschied von Semantik und Formatierung. (<a href="#semantik">#semantik</a>)</p>
+
+<ul>
+<li><a href="http://www.peterkropff.de/site/einfuehrung/einfuehrung.htm">Peter Kropffs Einführung</a></li>
+<li><a href="http://little-boxes.de/little-boxes-teil1-online.html">Little Boxes Teil 1</a></li>
+<li><a href="http://fwpf-webdesign.de/einfuehrung">Webdesign mit XHTML und CSS</a></li>
+<li><a href="http://www.admin-wissen.de/tutorials/html_lernen.html">HTML Tutorial</a></li>
+</ul>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>Welche HTML-Version ist die richtige?</h2>
+<p class="c">Die Wahrheit über XHTML.</p>
+
+<p>XHTML 1.0 ist praktisch deckungsgleich mit HTML 4.01. Der wesentliche Unterschied ist, dass der eine Standard in XML, der andere in SGML definiert ist. Dieser Unterschied hat aber nahezu keine praktische Relevanz. XHTML 1.0 ist de facto in erster Linie eine Syntaxkonvention zum Erstellen von HTML 4.01-Dokumenten.</p>
+
+<p>Abgesehen von einigen speziellen XML-Attributen und gewissen Unterschieden bei Self-Closing-Tags (<code>&lt;meta …&gt;</code> vs. <code>&lt;meta … /&gt;</code>) sollte jedes XHTML 1.0-Dokument auch als HTML 4.01 validieren. Ob als Doctype eine Variante von XHTML 1.0 oder eine Variante von HTML 4.01 gewählt wird, sollte sich nicht auf das Rendering oder die Funktionalität auswirken.</p>
+
+<p>Die eigentliche Idee hinter XHTML 1.0 bestand darin, HTML zu einem XML-Dialekt zu machen und infolgedessen Webseiten als XML-Dokumente auszuliefern.</p>
+
+<p>Dieses Anliegen ist grandios gescheitert. Sozusagen jedes XHTML-Dokument wird mit dem MIME-Type <code>text/html</code> an den Client ausgeliefert, was die Dokumente technisch gesehen zu HTML-Dokumenten macht. Echte XML-Dokumente müssten mit einem MIME-Type wie <code>application/xhtml+xml</code> ausgeliefert werden.</p>
+
+<p>Der Grund dafür ist, dass ein XML-Parser per Definition beim kleinsten Fehler den Rendervorgang abbricht und eine Fehlermeldung anzeigt statt Inhalte der Seite. 99 % aller Internetseiten sind aber nicht valide und würden demnach bei Auslieferung als XML überhaupt nicht angezeigt. Hinzu kommt, dass der Internet Explorer bis einschließlich Version 8 überhaupt nichts mit dem XML-MIME-Type anzufangen wusste und entsprechende Dokumente zum Download angeboten hat, statt sie zu rendern.</p>
+
+<p>Zusammenfassend: Weder Web-Autoren noch Client-Entwickler noch Entwickler von serverseitiger Software haben es jemals verstanden beziehungsweise die Notwendigkeit gesehen, fehlerfrei XML-kompatibel zu arbeiten. Genau deshalb ist schließlich der Versuch, einen Allgemeingültigkeitsanspruch von XML als Definitionsformat für HTML-Dokumente durchzusetzen, aufgegeben worden. Er war und ist schlicht und ergreifend nicht praktikabel, da er für die überwältigende Mehrheit aller am Web beteiligter Stellen eine zu große Bürde darstellt, ohne einen wesentlichen Vorteil eizubringen.</p>
+
+<p>Ungefähr hier beginnt die Geschichte von <i>HTML5</i>. HTML5 vereint zuallererst die beiden Gleise HTML und XHTML in einem einzigen Standard. Kurze Rekapitulation: XHTML 1.0 ist wenig mehr als eine strengere Syntaxkonvention zum Verfassen von HTML 4.01-Dokumenten. In HTML5 kann Code nach XML-Regeln geschrieben werden, muss aber nicht. Das steht jedem Autoren völlig frei. Der Doctype bleibt derselbe. Zudem ist HTML5 weitestgehend abwärtskompatibel. Zumindest die Strict-Varianten von HTML 4.01 und XHTML 1.0 sollten zum allergrößten Teil valides HTML5 darstellen. HTML5 implementiert den Unterschied zwischen HTML und XML zudem so, wie er ursprünglich gedacht war: <code>text/html</code> für HTML-Dokumente, <code>application/xhtml+xml</code> für X(HT)ML-Dokumente.</p>
+
+<p>Gegenwärtig gibt es für den allergrößten Teil der Web-Entwickler nicht den geringsten Grund, auf den HTML5-Doctype zu verzichten. Der HTML5-Doctype versetzt alle relevanten Browser in den Standards-Mode. Das wird sich auch in Zukunft nicht ändern.</p>
+
+<ul>
+<li><a href="http://hsivonen.iki.fi/doctype/">http://hsivonen.iki.fi/doctype/</a></li>
+<li><a href="http://carsten-protsch.de/zwischennetz/doctype/index.html">Der »DOCTYPE-Switch« und seine Auswirkungen</a></li>
+</ul>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>HTML5</h2>
+
+<ul>
+<li><a href="http://diveintohtml5.info/">Dive Into HTML5</a> (en)</li>
+<li><a href="http://www.findmebyip.com/litmus/">Browsersupport für HTML5/CSS3</a> (en), <a href="http://caniuse.com/">When can I use…</a> (en)</li>
+<li><a href="http://html5please.us/">HTML5 Please</a></li>
+<li><a href="http://simon.html5.org/html-elements">http://simon.html5.org/html-elements</a></li>
+</ul>
+

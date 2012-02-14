@@ -1,0 +1,42 @@
+<?php
+
+namespace org\ermshaus\phpsog;
+
+$p = $pathToRoot;
+
+?><!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title><?=e($title)?></title>
+        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>styles/normalize.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>styles/dih5.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>styles/overrides.css" />
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    </head>
+
+    <body>
+        <? if ($title !== 'Home – webdevbuch') : ?>
+        <p><a href="<?=$p?>">← zum Index</a></p>
+        <? endif; ?>
+
+        <?= $content ?>
+
+        <p class="a">&#x2767;</p>
+
+        <p class="c">Dieses Dokument steht unter der <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA-3.0-Lizenz</a>.<br />
+        Der Ansprechpartner ist <a href="http://www.ermshaus.org/contact">Marc Ermshaus</a>.</p>
+
+        <p class="c">Das Design basiert auf dem Stylesheet von Mark Pilgrims „Dive Into HTML5“ (offline).<br />
+        Die Titelgrafik stammt von <a href="http://www.pdclipart.org/">PDClipart.org</a>.</p>
+
+        <p class="c">2012&mdash;</p>
+
+        <p class="c"><a href="http://validator.w3.org/check?uri=referer">Diese Seite validieren</a>.</p>
+
+        <p class="c">Build <?=date('Y-m-d H:i:s')?></p>
+    </body>
+
+</html>

@@ -1,0 +1,69 @@
+<?php
+
+$title = 'Regex';
+
+?>
+
+<h1>Regex</h1>
+
+<h2>Kurz und knackig</h2>
+
+<p>So ziemlich das Wichtigste, was über reguläre Ausdrücke zu wissen ist: Sie sind standardmäßig <a href="http://www.regular-expressions.info/repeat.html#greedy">greedy</a>.</p>
+
+<p>Das Zweitwichtigste sind <a href="http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php">Pattern modifiers:</a></p>
+
+<p>Kurze Verdeutlichung anhand einer Beispieleingabe:</p>
+
+<pre><code>&lt;div id="information"&gt;
+    &lt;p&gt;ein test&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;hier kommt mehr inhalt&lt;/p&gt;
+&lt;div class="example"&gt;Hallo Welt!&lt;/div&gt;
+</code></pre>
+
+<p>Was matcht <code>!&lt;div id="information"&gt;(.*)&lt;/div&gt;!</code>?</p>
+
+<p>Gar nichts, denn der s-Modifier (PCRE_DOTALL) ist standardmäßig nicht gesetzt, wodurch der Punkt (.) keine Zeilenumbrüche einschließt.</p>
+
+<p>Was matcht <code>!&lt;div id="information"&gt;(.*)&lt;/div&gt;!s</code>?</p>
+
+<pre><code>&lt;div id="information"&gt;
+<mark>    &lt;p&gt;ein test&lt;/p&gt;</mark>
+<mark>&lt;/div&gt;</mark>
+<mark>&lt;p&gt;hier kommt mehr inhalt&lt;/p&gt;</mark>
+<mark>&lt;div class="example"&gt;Hallo Welt!</mark>&lt;/div&gt;
+</code></pre>
+
+<p>Ausdrücke sind standardmäßig greedy. <code>(.*)&lt;/div&gt;</code> matcht nicht bis zum ersten Vorkommen von <code>&lt;/div&gt;</code>, sondern bis zum letzten. Ein Fragezeichen hinter dem Quantifikator (dem Sternchen) kehrt dieses Verhalten um.</p>
+
+<p>Was matcht <code>!&lt;div id="information"&gt;(.*?)&lt;/div&gt;!s</code>?</p>
+
+<pre><code>&lt;div id="information"&gt;
+<mark>    &lt;p&gt;ein test&lt;/p&gt;</mark>
+&lt;/div&gt;
+&lt;p&gt;hier kommt mehr inhalt&lt;/p&gt;
+&lt;div class="example"&gt;Hallo Welt!&lt;/div&gt;
+</code></pre>
+
+<p>Wunderbar. Das ist vermutlich das, was wir wollten.</p>
+
+<p>Hinweis: Es gibt einen Pattern modifier (U, PCRE_UNGREEDY), der „greediness“ standardmäßig in „lazyness“ umwandelt. Der könnte hier anstelle des Fragezeichens eingesetzt werden. (Das Fragezeichen würde dann aus „lazyness“ wiederum „greediness“ machen, wenn U gesetzt ist.) Von der Verwendung von U ist jedoch abzuraten, da es einfacher zu merken und zu lesen ist, „Quantifikator = greedy“ und „Quantifikator mit Fragezeichen = ungreedy/lazy“ anzunehmen.</p>
+
+<h2>Tipps</h2>
+
+<dl>
+<dt>Auslesen von Attributen eines HTML-Tags</dt>
+<dd>
+<p>Hier am Beispiel eines <code>&lt;a&gt;</code>-Tags, der auf eine Datei „datei.php“ verweist.</p>
+
+<pre><code>!&lt;a href="datei\.php[^"]*" title="([^"]*)"!</code></pre>
+
+<p><code>[^"]*</code> steht für „beliebig viele Zeichen, die nicht das Anführungszeichen sind“.</p>
+</dd>
+</dl>
+
+<ul>
+<li><a href="http://kodos.sourceforge.net/">http://kodos.sourceforge.net/</a></li>
+<li><a href="http://regexp-evaluator.de/">http://regexp-evaluator.de/</a></li>
+</ul>
+

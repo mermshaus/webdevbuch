@@ -1,0 +1,86 @@
+<?php
+
+$title = 'PHP';
+
+?>
+
+<h1>PHP</h1>
+
+<ul>
+<li><a href="http://svn.php.net/viewvc/php/php-src/tags/php_5_3_6/">http://svn.php.net/viewvc/php/php-src/tags/php_5_3_6/</a></li>
+<li><a href="http://professionelle-softwareentwicklung-mit-php5.de/">http://professionelle-softwareentwicklung-mit-php5.de/</a></li>
+</ul>
+
+
+
+<h2>Debugging</h2>
+
+<ul>
+<li><a href="http://phpforum.de/forum/showthread.php?t=216988">http://phpforum.de/forum/showthread.php?t=216988</a></li>
+</ul>
+
+
+
+<h2>Fehlerbehandlung</h2>
+
+<p>Ein Nutzer sollte keine internen Fehlermeldungen zu sehen bekommen. „Intern“ meint die Standard-Meldungen, die PHP oder Komponenten wie Datenbank-Adapter generieren. Normale Nutzer können damit ohnehin nichts anfangen, Angreifern helfen diese Meldungen aber, Schwachstellen zu entdecken oder Informationen über das System zu gewinnen (zum Beispiel Tabellen- und Feldnamen einer Datenbank oder Pfade von Script-Dateien) Wenn schon etwas schief läuft, ist das das Letzte, was wir wollen.</p>
+
+<p>Es ist nicht leicht, eine wasserdichte Fehlerbehandlung zu programmieren. Ich habe dafür gerade kein besonders gutes Beispiel, aber in einem Script können viele Dinge falsche Werte zurückgeben, die wahrscheinlich niemals darauf überprüft werden. Nehmen wir vielleicht mal eine Funktion wie file_get_contents. Wer prüft jede Rückgabe von file_get_contents auf !== false? Ich tue das nicht. Dabei steht in der Doku: „The function returns the read data or FALSE on failure.“ Ich wette, dass frei nach Gene Kranz die meisten Programmierer bei solchen Befehlen sagen: „Failure is not an option.“</p>
+
+<p>Shit happens. Fehler passieren. Der am meisten vernachlässigte Bereich bei der Entwicklung von Software ist vermutlich die Qualitätssicherung. Das wird bei „Tante Ernas Blumenladen“ vielleicht niemals jemanden interessieren, aber <a href="http://arstechnica.com/gaming/news/2011/04/sony-admits-utter-psn-failure-your-personal-data-has-been-stolen.ars">fragt zum Beispiel Sony</a>. Das „Problem“ ist, dass selten jemand Geld dafür ausgeben will, sein Programm oder seine Seite gegen Angriffe abzusichern, die vermutlich niemals auftreten werden. Dabei gibt es Programmierparadigmen, die von sich aus darauf ausgelegt sind, Fehler zu reduzieren. Das ist zum einen ganz simpel objektorientierte Programmierung (Objekte können einen gültigen, internen Zustand durchsetzen, assoziative Arrays können das nicht) und zum anderen etwa <a href="http://de.wikipedia.org/wiki/Testgetriebene_Entwicklung">testgetriebene Entwicklung</a> (TDD).</p>
+
+<p>Selbst wenn Quellcode fehlerfrei ist, die Ausführungsumgebung muss es nicht sein. Eine Anwendung geht üblicherweise und notgedrungen von einem bestimmten Setup des Webservers oder der PHP-Installation aus. Eine passende Umgebung lässt sich zwar im Code durch gewisse Abfragen ansatzweise sicherstellen, aber alle Eventualitäten werden dadurch vermutlich nicht abgedeckt werden können. Beispielsweise kann eine Anwendung davon ausgehen, dass die mb_*-Befehle standardmäßig UTF-8 nutzen. Das muss aber in der Konfiguration nicht so eingestellt sein. Ein Aufruf von mb_internal_encoding wird dadurch praktisch zur Pflicht.</p>
+
+
+
+<h2>Dependency Injection</h2>
+
+<ul>
+<li><a href="http://www.phpforum.de/forum/showthread.php?p=1493122">http://www.phpforum.de/forum/showthread.php?p=1493122</a></li>
+<li><a href="http://fabien.potencier.org/article/12/do-you-need-a-dependency-injection-container">http://fabien.potencier.org/article/12/do-you-need-a-dependency-injection-container</a></li>
+<li><a href="http://www.php.de/software-design/81559-di-container.html">http://www.php.de/software-design/81559-di-container.html</a></li>
+</ul>
+
+<h2>Helper Class</h2>
+
+<ul>
+<li><a href="http://blogs.msdn.com/b/nickmalik/archive/2005/09/07/462054.aspx">http://blogs.msdn.com/b/nickmalik/archive/2005/09/07/462054.aspx</a></li>
+</ul>
+
+<h2>Unit-Testing</h2>
+
+<ul>
+<li><a href="http://www.php.de/php-fortgeschrittene/67074-php-unittesting.html">http://www.php.de/php-fortgeschrittene/67074-php-unittesting.html</a></li>
+</ul>
+
+<h2>Ressourcen</h2>
+
+<h3>Nachschlagewerke</h3>
+
+<p><a href="http://www.php.net/docs.php">PHP Handbuch auf php.net</a> Das offizielle Sprachhandbuch ist die mit Abstand wichtigste Ressource im täglichen Umgang mit PHP.</p>
+
+<h3>Einführungen</h3>
+
+<p><a href="http://tut.php-quake.net/de/">Quakenet/#php Tutorial</a> Das Quakenet-Tutorial bietet eine ausführliche grundlegende Einführung in die PHP-Programmierung. In späteren Kapiteln widmet es sich darüber hinaus einigen praktischen Anwendungsbeispielen.</p>
+
+<p><a href="http://www.schattenbaum.net/php/anfang.php">PHP für dich</a> Claudia Unkelbachs Einführung richtet sich vor allem an Programmieranfänger. Sie ist ein leicht verständlicher Einstieg ins Thema.</p>
+
+<p><a href="http://www.php-einfach.de/php-tutorial/php-tutorial.php">PHP-Einfach Tutorial</a></p>
+
+<p><a href="http://w3schools.com/php/default.asp">PHP Tutorial</a></p>
+
+<h3>Weitere Themen</h3>
+
+<ul>
+<li><a href="http://tutorials.lemme.at/mvc-mit-php/">MVC mit PHP</a></li>
+
+<li><a href="http://professionelle-softwareentwicklung-mit-php5.de/">Professionelle Softwareentwicklung mit PHP 5</a></li>
+</ul>
+
+<h3>Tools</h3>
+
+<ul>
+<li><a href="http://www.phpunit.de/manual/3.6/en/index.html">PHPUnit</a> Das Standard-Tool zum Erstellen von Tests für PHP-Anwendungen. </li>
+<li><a href="http://phpmd.org/">PHP Mess Detector</a></li>
+<li><a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a> Ein Generator für PHP-Dokumentationen. </li>
+</ul>
