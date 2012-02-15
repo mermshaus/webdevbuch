@@ -1,0 +1,126 @@
+<?php
+
+namespace org\ermshaus\phpsog;
+
+$title = 'MVC';
+
+?>
+
+<h1>MVC</h1>
+
+<h2>Einführung</h2>
+
+<p>Dieser Text erklärt, wie eine Webseite mit einfachen Mitteln auf eine an das MVC-Design angelehnte Weise programmiert werden kann.</p>
+
+<p>MVC steht für „Model, View, Controller“ und beschreibt eine Aufteilung der Bestandteile einer Anwendung in einen Teil, der die eigentliche Programmlogik implementiert (Model), einen Teil, der die Ausgaben generiert (View), und einen Teil, der zu jeder Anfrage (Request) die passende auszuführende Logik auswählt und deren Rückgaben an einen passenden Ausgabe-Teil weitergibt (Controller).</p>
+
+<p>Diese einzelnen Bestandteile sind üblicherweise objektorientiert als Klassen realisiert. Darauf wird in diesem Beispiel bewusst verzichtet. Der Fokus liegt auf der Abhandlung eines Requests von der Auswahl eines Controllers bis zur Ausgabe über ein View-Script.</p>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>Controller und Actions</h2>
+
+<p>Das MVC-Design basiert darauf, jeden Request über eine Action eines Controllers abzuarbeiten. Üblicherweise ist der Controller dabei eine Klasse, die Actions sind Methoden dieser Klasse. In diesem Beispiel ist ein Controller eine simple PHP-Datei mit der Bezeichung &lt;Controller-Name&gt;.php. Die Actions sind Funktionen innerhalb dieser Datei und werden nach dem Schema &lt;Controller-Name&gt;_&lt;Action-Name&gt;Action benannt.</p>
+
+<p>Der Aufruf der Startseite einer Webseite wird häufig als Aufruf der index-Action des index-Controllers (in Zukunft als index.index geschrieben) umgesetzt. In diesem Fall also als Funktion index_indexAction in der Controller-Datei index.php.</p>
+
+<p>Um die Übersicht zu erleichtern, werden alle Controller-Dateien in einem Unterverzeichnis controllers abgelegt.</p>
+
+<p>Der eigentlichen Index-Datei index.php im Root-Verzeichnis der Webseite fällt die Aufgabe zu, anhand der Request-Parameter (zum Beispiel GET-Werte) den passenden Controller zu finden, einzubinden und dort die passende Action-Funktion aufzurufen.</p>
+
+<p class="legend top">Listing 1: Auswahl und Aufruf einer Controller-Action in der Index-Datei</p>
+
+<pre><code><?=e(<<<'EOT'
+$controller = (isset($_GET['controller']))
+            ? trim((string) $_GET['controller'])
+            : 'index';
+ 
+$action = (isset($_GET['action']))
+        ? trim((string) $_GET['action'])
+        : 'index';
+ 
+$controllerPath = realpath('./controllers/' . $controller . '.php');
+ 
+if (strpos($controllerPath, realpath('./controllers')) !== 0) {
+    throw new Exception('Invalid controller specified "' . $controller . '"');
+}
+ 
+require_once $controllerPath;
+ 
+$actionFunctionName = $controller . '_' . $action . 'Action';
+ 
+if (!function_exists($actionFunctionName)) {
+    throw new Exception('Invalid controller action specified "'
+            . $controller . '.' . $action . '"');
+}
+ 
+$appData['pageTitle'] = 'Meine Seite';
+ 
+$tplVars = $actionFunctionName($appData);
+EOT
+)?></code></pre>
+
+<p>Dieses Beispiel erwartet die Angaben für Controller und Action in den GET-Parametern $_GET['controller'] und $_GET['action']. Wird einer der beiden Parameter nicht gesetzt, wird der Wert index angenommen. Dies stellt sicher, dass der parameterlose Aufruf des Root-Verzeichnisses (zum Beispiel http://example.org/) an index.index weitergeleitet wird.</p>
+
+<p>Wird ein falscher Controller oder eine falsche Action angegeben, wirft die Anwendung eine Fehlermeldung.</p>
+
+<p>Jeder Action werden zudem im Parameter $appData eine Reihe „globaler“ Werte übergeben. Diese könnten beispielsweise die Daten des derzeit eingeloggten Nutzers enthalten oder wie in diesem Fall ein Feld pageTitle, das in der Action überschrieben werden kann und das später bei der Ausgabe in das &lt;title&gt;-Element der Seite geschrieben wird.</p>
+
+<p class="a">&#x2767;</p>
+
+
+
+<h2>View-Scripts</h2>
+
+<p>Als Rückgabe der Action-Funktionen wird ein assoziatives Array von Werten erwartet, die dem zur Action gehörenden View-Script übergeben werden.</p>
+
+<p>Das View-Script generiert die tatsächlichen Ausgaben, die die aufgerufene Action erzeugt. Jeder Action ist dabei standardmäßig genau ein View-Script zugeordnet. Es trägt den Namen &lt;Action-Name&gt;.phtml und liegt im Unterverzeichnis views/&lt;Controller-Name&gt;.</p>
+
+<p>Eine Anwendung mit einem index-Controller und einer dort definierten index-Action benötigt also bis hierher folgende Verzeichnisstruktur:</p>
+
+<p class="legend top">Listing 2: Verzeichnisübersicht für index-Controller mit index-Action</p>
+
+<pre><code><?=e(<<<'EOT'
+.
++--controllers
+|  `--index.php
++--views
+|  `--index
+|     `--index.phtml
+`--index.php
+EOT
+)?></code></pre>
+
+<p>Die index-Action des index-Controllers könnte so aussehen:</p>
+
+<p class="legend top">Listing 3: Beispiel für eine simple index.index-Action</p>
+
+<pre><code><?=e(<<<'EOT'
+function index_indexAction(&$appData)
+{
+    $appData['pageTitle'] = 'Startseite';
+ 
+    $vars = array();
+    $vars['name'] = 'Mark van Bommel';
+ 
+    return $vars;
+}
+EOT
+)?></code></pre>
+
+<p>In dieser Action wird der Seitentitel neu gesetzt und außerdem wird ein Array mit dem Inhalt name =&gt; Mark van Bommel zurückgegeben, das im View-Script verwendet werden soll.</p>
+
+<p>Das entsprechende View-Script index.phtml:</p>
+
+<p class="legend top">Listing 4: View-Script index.phtml</p>
+
+<pre><code><?=e(<<<'EOT'
+<h1>Willkommen auf meiner Homepage</h1>
+ 
+<p>Der Inhalt von 'Name' lautet: <?php echo escape($name); ?>.</p>
+EOT
+)?></code></pre>
+
+<p>Hier tauchen einige neue Elemente auf, die im nächsten Abschnitt besprochen werden.</p>
