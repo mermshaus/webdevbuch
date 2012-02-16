@@ -1,0 +1,3 @@
+[submodule "tools/phpsog"]
+	path = tools/phpsog
+	url = git://github.com/mermshaus/phpsog.git
