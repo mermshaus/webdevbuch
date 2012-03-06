@@ -1,0 +1,23 @@
+{
+    "repositories":[
+        {
+            "type":"package",
+            "package":{
+                "name":"phpsog/phpsog",
+                "version":"0.0.1",
+                "dist":{
+                    "url":"https://github.com/mermshaus/phpsog/zipball/c61dbefd5f4affec3ddc9f31502fb26864d58bc1",
+                    "type":"zip"
+                },
+                "autoload":{
+                    "psr-0":{
+                        "org":"library/"
+                    }
+                }
+            }
+        }
+    ],
+    "require":{
+        "phpsog/phpsog":"0.0.1"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "hash": "8c8b7b8afd97c0da1a1b10953419a76d",
+    "packages": [
+        {
+            "package": "phpsog/phpsog",
+            "version": "0.0.1"
+        }
+    ],
+    "aliases": []
+}
