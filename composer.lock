@@ -1,6 +1,10 @@
 {
-    "hash": "8c8b7b8afd97c0da1a1b10953419a76d",
+    "hash": "fb2a066a11403ccdc03d917d407daedc",
     "packages": [
+        {
+            "package": "kaloa/kaloa",
+            "version": "1.0.0"
+        },
         {
             "package": "phpsog/phpsog",
             "version": "0.0.1"

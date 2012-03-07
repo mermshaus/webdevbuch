@@ -1,6 +1,6 @@
 <?php
 
-namespace org\ermshaus\phpsog;
+namespace Phpsog;
 
 $title = 'MVC';
 
@@ -36,28 +36,28 @@ $title = 'MVC';
 $controller = (isset($_GET['controller']))
             ? trim((string) $_GET['controller'])
             : 'index';
- 
+
 $action = (isset($_GET['action']))
         ? trim((string) $_GET['action'])
         : 'index';
- 
+
 $controllerPath = realpath('./controllers/' . $controller . '.php');
- 
+
 if (strpos($controllerPath, realpath('./controllers')) !== 0) {
     throw new Exception('Invalid controller specified "' . $controller . '"');
 }
- 
+
 require_once $controllerPath;
- 
+
 $actionFunctionName = $controller . '_' . $action . 'Action';
- 
+
 if (!function_exists($actionFunctionName)) {
     throw new Exception('Invalid controller action specified "'
             . $controller . '.' . $action . '"');
 }
- 
+
 $appData['pageTitle'] = 'Meine Seite';
- 
+
 $tplVars = $actionFunctionName($appData);
 EOT
 )?></code></pre>
@@ -101,10 +101,10 @@ EOT
 function index_indexAction(&$appData)
 {
     $appData['pageTitle'] = 'Startseite';
- 
+
     $vars = array();
     $vars['name'] = 'Mark van Bommel';
- 
+
     return $vars;
 }
 EOT
@@ -118,7 +118,7 @@ EOT
 
 <pre><code><?=e(<<<'EOT'
 <h1>Willkommen auf meiner Homepage</h1>
- 
+
 <p>Der Inhalt von 'Name' lautet: <?php echo escape($name); ?>.</p>
 EOT
 )?></code></pre>
@@ -135,94 +135,94 @@ EOT
 
 <pre><code><?=e(<<<'EOT'
 <?php
- 
+
 function url($controller, $action, array $params = array())
 {
     $tmp = array();
- 
+
     if ($controller !== 'index' || $action !== 'index') {
         $tmp['controller'] = $controller;
         $tmp['action']     = $action;
     }
- 
+
     $params = array_merge($tmp, $params);
- 
+
     $queryPart = '';
- 
+
     if (count($params) > 0) {
         $queryPart = '?' . http_build_query($params, '', '&amp;');
     }
- 
+
     $url = './' . $queryPart;
- 
+
     return $url;
 }
- 
+
 function escape($string, $quoteStyle = ENT_QUOTES, $charset = 'UTF-8')
-{   
+{
     return htmlspecialchars($string, $quoteStyle, $charset);
 }
- 
+
 function loadViewScript($controller, $action, array $vars = array())
 {
     $scriptPath = './views/' . $controller . '/' . $action . '.phtml';
- 
+
     extract($vars);
     ob_start();
     include $scriptPath;
     return ob_get_clean();
 }
- 
+
 $controller = (isset($_GET['controller']))
             ? trim((string) $_GET['controller'])
             : 'index';
- 
+
 $action = (isset($_GET['action']))
         ? trim((string) $_GET['action'])
         : 'index';
- 
+
 $controllerPath = realpath('./controllers/' . $controller . '.php');
- 
+
 if (strpos($controllerPath, realpath('./controllers')) !== 0) {
     throw new Exception('Invalid controller specified "' . $controller . '"');
 }
- 
+
 require_once $controllerPath;
- 
+
 $actionFunctionName = $controller . '_' . $action . 'Action';
- 
+
 if (!function_exists($actionFunctionName)) {
     throw new Exception('Invalid controller action specified "'
             . $controller . '.' . $action . '"');
 }
- 
+
 $appData['pageTitle'] = 'Meine Seite';
- 
+
 $tplVars = $actionFunctionName($appData);
- 
+
 if ($tplVars === null) {
     $tplVars = array();
 }
- 
+
 ?><!DOCTYPE html>
- 
+
 <html lang="en">
- 
+
     <head>
         <meta charset="utf-8" />
         <title><?php echo escape($appData['pageTitle']); ?></title>
     </head>
- 
+
     <body>
         <ul>
             <li><a href="<?php echo url('index', 'index'); ?>">Home</a></li>
             <li><a href="<?php echo url('index', 'about'); ?>">About</a></li>
             <li><a href="<?php echo url('book', 'index'); ?>">Themen</a></li>
         </ul>
- 
+
         <?php echo loadViewScript($controller, $action, $tplVars); ?>
     </body>
- 
+
 </html>
 EOT
 )?></code></pre>
@@ -258,16 +258,16 @@ EOT
 function book_getTopicList()
 {
     $topicsRootPath = './data/topics';
- 
+
     $topics = array();
- 
+
     $topics['Informatik'] = array(
         'Sortierverfahren' => $topicsRootPath
                 . '/informatik/sortierverfahren.phtml',
         'Kontrollstrukturen' => $topicsRootPath
                 . '/informatik/kontrollstrukturen.phtml',
     );
- 
+
     return $topics;
 }
 EOT
@@ -305,48 +305,48 @@ EOT
 function book_getTopicList()
 {
     $topicsRootPath = './data/topics';
- 
+
     $topics = array();
- 
+
     $topics['Informatik'] = array(
         'Sortierverfahren' => $topicsRootPath
                 . '/informatik/sortierverfahren.phtml',
         'Kontrollstrukturen' => $topicsRootPath
                 . '/informatik/kontrollstrukturen.phtml',
     );
- 
+
     return $topics;
 }
- 
+
 function book_indexAction(&$appData)
 {
     $vars['topics'] = book_getTopicList();
- 
+
     return $vars;
 }
- 
+
 function book_viewAction(&$appData)
 {
     $topics = book_getTopicList();
- 
+
     $vars['topics'] = $topics;
- 
+
     $vars['page'] = (isset($_GET['page']))
                   ? $_GET['page']
                   : null;
- 
+
     $appData['pageTitle'] = $_GET['section'];
- 
+
     if ($vars['page'] !== null) {
         $vars['content'] = file_get_contents(
                 $topics[$_GET['section']][$_GET['page']]);
         $appData['pageTitle'] = $vars['page'];
     }
- 
+
     $vars['title'] = ($vars['page'] !== null)
                    ? $vars['page']
                    : $_GET['section'];
- 
+
     return $vars;
 }
 EOT
@@ -369,21 +369,21 @@ EOT
 <pre><code><?=e(<<<'EOT'
 <ul>
 <?php foreach ($topics as $title => $content) : ?>
- 
+
     <li><a href="<?php echo url('book', 'view', array('section' => $title)); ?>"
            ><?php echo escape($title); ?></a>
- 
+
         <ul>
         <?php foreach ($content as $pageTitle => $unused) : ?>
- 
+
             <li><a href="<?php echo url('book', 'view',
                     array('section' => $title, 'page' => $pageTitle)); ?>"
                     ><?php echo escape($pageTitle); ?></a></li>
- 
+
         <?php endforeach; ?>
         </ul>
     </li>
- 
+
 <?php endforeach; ?>
 </ul>
 EOT
@@ -397,7 +397,7 @@ EOT
 
 <pre><code><?=e(<<<'EOT'
 <h1>Themenübersicht</h1>
- 
+
 <?php echo loadViewScript('book', '_menu', array('topics' => $topics)); ?>
 EOT
 )?></code></pre>
@@ -408,9 +408,9 @@ EOT
 
 <pre><code><?=e(<<<'EOT'
 <h1><?php echo escape($title); ?></h1>
- 
+
 <?php echo loadViewScript('book', '_menu', array('topics' => $topics)); ?>
- 
+
 <?php if ($page !== null) : ?>
     <?php echo $content; ?>
 <?php endif; ?>
@@ -468,15 +468,15 @@ function requestUriToGetArray()
     $basePath     = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME);
     $requestPath  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $relativePath = substr($requestPath, strlen($basePath));
- 
+
     $pathParts = explode('/', trim($relativePath, '/'));
- 
+
     $count = count($pathParts);
- 
+
     if ($count > 1) {
         $_GET['controller'] = $pathParts[0];
         $_GET['action']     = $pathParts[1];
- 
+
         for ($i = 2; $i < $count; $i += 2) {
             $key   = $pathParts[$i];
             $value = (isset($pathParts[$i + 1]))
@@ -516,7 +516,7 @@ EOT
 function url($controller, $action, array $params = array())
 {
     $basePath = rtrim(pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME), '/');
- 
+
     if ($controller === 'index' && $action === 'index'
             && count($params) === 0
     ){
@@ -525,13 +525,13 @@ function url($controller, $action, array $params = array())
         // wurden
         return $basePath . '/';
     }
- 
+
     $url = $basePath . '/' . $controller . '/' . $action;
- 
+
     foreach ($params as $key => $value) {
         $url .= '/' . urlencode($key) . '/' . urlencode($value);
     }
- 
+
     return $url;
 }
 EOT

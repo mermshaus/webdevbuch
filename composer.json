@@ -6,18 +6,46 @@
                 "name":"phpsog/phpsog",
                 "version":"0.0.1",
                 "dist":{
-                    "url":"https://github.com/mermshaus/phpsog/zipball/c61dbefd5f4affec3ddc9f31502fb26864d58bc1",
+                    "url":"https://github.com/mermshaus/phpsog/zipball/bfdfbb953c844133460d7e37a88573b8650d8986",
                     "type":"zip"
                 },
                 "autoload":{
                     "psr-0":{
-                        "org":"library/"
+                        "Phpsog":"library/"
+                    }
+                }
+            }
+        },
+
+
+
+        {
+            "type":"package",
+            "package":{
+                "name":"kaloa/kaloa",
+                "version":"1.0.0",
+                "dist":{
+                    "url":"https://github.com/mermshaus/Kaloa/zipball/bc070039687fbe8e6cc60e0dbb44823a5d14ad5b",
+                    "type":"zip"
+                },
+                "source":{
+                    "url":"git://github.com/mermshaus/Kaloa.git",
+                    "type":"git",
+                    "reference":"bc070039687fbe8e6cc60e0dbb44823a5d14ad5b"
+                },
+                "autoload":{
+                    "psr-0":{
+                        "Kaloa":"library/"
                     }
                 }
             }
         }
+
+
+
     ],
     "require":{
-        "phpsog/phpsog":"0.0.1"
+        "phpsog/phpsog":"0.0.1",
+        "kaloa/kaloa":"1.0.0"
     }
 }
