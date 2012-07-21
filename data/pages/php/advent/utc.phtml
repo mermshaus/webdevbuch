@@ -1,0 +1,89 @@
+<?php
+
+$this->setTitle('UTC – So viel Zeit muss sein');
+
+?>
+
+<h1>UTC – So viel Zeit muss sein</h1>
+
+<p>„Was soll das heißen, die Daten ‚kommen in der Zukunft an‘?“ Der Weihnacksmann blickt bedrohlich hinter seinem Schreibtisch hervor. Er hat ohnehin viel zu tun und jetzt stimmt irgendwas mit der Datenübertragung nach Südamerika nicht. Das passt ihm gar nicht in den Kram.</p>
+
+<p>Der unglückliche EDV-Wichtel, der ihm soeben die schlechte Nachricht überbracht hat, druckst nervös herum: „Na ja, Boss, die Daten kommen natürlich schon <em>jetzt</em> an. Sie haben nur nicht die richtige Zeit. Das System liest die internen Datumsfelder der Informationspakete aus. Die liegen aber in der Zukunft.“</p>
+
+<p>Die Augen des Weihnacksmanns verengen sich zu Schlitzen.</p>
+
+<p>Mit zittriger Stimme fährt der Wichtel fort: „Wir… wir glauben, wir kennen die Ursache.“ – „So.“ – „Ja. Es scheint an der Umrechnung zu liegen. Also, das ist so: In Brasilien sind sie in einer anderen Zeitzone. Da wird… da müssen wir Stunden hinzuzählen, damit es unsere Zeit ergibt.“ Die Hände des Wichtels suchen verkrampften Halt an der Schreibtischkante seines Chefs. Der grollt unter seinem Bart: „Und weiter?“ – „Nun, da scheint nicht richtig addiert zu werden. Wir hatten doch die Zeitumstellung. Aber zum Beispiel in Brasilien haben sie die nicht, weil sie so nah am Äquator sind. Da ist es auch im Winter hell.“</p>
+
+<p>Der Wichtel blickt hilfesuchend im Raum umher. Doch er entdeckt nichts außer den Schweißperlen, die seinen Rücken herunterrinnen. Er ist allein. „Und hier hätten wir ja eigentlich schon 16 Uhr, aber nun erst 15 Uhr. Aber wir addieren noch die Stunden als hätten wir 16 Uhr. Und das ist eine zu viel.“</p>
+
+<p><i>An dieser Stelle scheint es angebracht, die Erzählung für einen Moment zu unterbrechen. Es sollte nicht unerwähnt bleiben, dass der Wichtel, als er das Büro des Weihnacksmanns betrat, bereits einen langen Tag und eine ebenso lange Nacht hinter sich hatte. Fieberhaft hatten sie erst nach einer Ursache und dann nach einer Lösung gesucht, die den plötzlich so eigenartig gewordenen Verlauf der Zeit wieder ins Korsett der logischen Gesetzmäßigkeiten zwängen würde.</i></p>
+
+<p><i>Nach einigem Hin und Her, ausgiebigem Debugging und noch ausgiebigerem Raufen von Bärten waren sie schließlich auf die Zeitumstellung als Auslöser des erlebten Phänomens gestoßen. Die eintreffenden Daten aus der Niederlassung in Südamerika weigerten sich hartnäckig, ihre Uhren nur zu dem Zweck zurückzustellen, korrekt in die lokale Datenbank eingespeist werden zu können.</i></p>
+
+<p><i>Auf diese Erkenntnis folgte dann rasch eine weitere, glücklicherweise erfreulichere Feststellung: Der Fehler würde rückwirkend behoben werden können. Dazu müssten in der Datenbank lediglich diejenigen aus Südamerika stammenden Datensätze, die nach dem Zurückdrehen der Uhr hinzugefügt worden waren, zeitlich um eine Stunde korrigiert werden. Dazu müsste allerdings empfindlich in das Gesamtsystem eingegriffen werden, da diverse Caches und andere abgeleitete Daten neu generiert werden müssten. Das wiederum würde eine Form von Auswahlverfahren unumgänglich werden lassen: Es würde einen Unglücklichen geben müssen, um mit diesem Anliegen an den Weihnacksmann heranzutreten.</i></p>
+
+<p>Die linke Hand des Wichtels wandert unbewusst in eine Tasche seiner Jacke und schließt sich um einen überraschend kurzen Strohhalm.</p>
+
+<p>„Nun“, hören seine Ohren den Weihnacksmann in verdächtig ruhigem Ton sagen, „was sollen wir weiterhin tun, um diese Sache zu lösen?“</p>
+
+<p><i>Diese Frage hatten sie diskutiert. Glücklicherweise waren sie auf eine durchaus zufriedenstellende Lösung gestoßen.</i></p>
+
+<p>Der Wichtel nimmt all seinen Mut zusammen. „Wir müssen das System für einen Augenblick anhalten, um diverse Korrekturen vorzunehmen.“ Der Wichtel spürt, wie die Temperatur im Raum sinkt. „Wir haben aber eine Lösung gefunden, damit derlei Unannehmlichkeiten in Zukunft verhindert werden können.“</p>
+
+<p>„So. Habt ihr das?“</p>
+
+<p><i>Auf der Suche nach dieser Lösung waren sie in den frühen Morgenstunden auf einen Standard zur Speicherung von Zeit gestoßen, <a href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">der sich UTC</a> nennt oder ‚koordinierte Weltzeit‘.</i></p>
+
+<p>Der Wichtel blickt erwartungsvoll, doch sein Gegenüber zeigt keinerlei Reaktion.</p>
+
+<p>„Die herausragenden Eigenschaften dieses UTC-Zeitformats sind es, dass es überall auf der Welt immerzu gleich ist und dass diese Zeit immerzu mit gleicher Geschwindigkeit vergeht. Das ist auch dann der Fall, wenn unsere lokale Zeit im Sommer wechselt, um das Tageslicht zu nutzen. UTC bleibt davon gänzlich unbeeindruckt.“</p>
+
+<p>Stille, nur gestört vom skeptischen, lärmenden Blick des Weihnacksmanns.</p>
+
+<p>„Wir können all unsere Daten in dieser UTC-Zeit speichern. Damit haben wir eine Grundlage, die wir je nach Kontext in lokale Zeitzonen umrechnen können. Das ist eindeutig und löst sämtliche Schwierigkeiten beim Umgang mit Zeit.“</p>
+
+<p><i>Die Wichtel hatten das relativ genau recherchiert, um ein Ass im Ärmel zu haben. Sie hatten herausbekommen, <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_utc-date">dass ihr Datenbanksystem Funktionen anbietet, die mit UTC umgehen können</a>, die sie statt etwa NOW() verwenden könnten. Sie hatten außerdem herausbekommen, <a href="http://www.php.net/manual/en/function.gmdate.php">wie sie UTC in PHP erzeugen</a>. Auch hatten sie Wege gefunden, zwischen UTC und lokaler Zeit umzurechnen:</i></p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+function localDateToUtc($date)
+{
+    return gmdate('Y-m-d H:i:s', strtotime($date));
+}
+
+function utcTolocalDate($utcDate)
+{
+    $tz = date_default_timezone_get();
+    date_default_timezone_set('UTC');
+    $utc_timestamp = strtotime($utcDate);
+    date_default_timezone_set($tz);
+
+    return date('Y-m-d H:i:s', $utc_timestamp);
+}
+EOT
+)?></code></pre>
+
+<p><i>In der Anwendung könnte das dann konkret so aussehen:</i></p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+date_default_timezone_set('Europe/Berlin');
+    // Tun wir so, als wären wir in Berlin.
+
+$utc = localDateToUtc(date('Y-m-d H:i:s'));
+echo $utc . " (UTC)<br />\n";
+
+// Jetzt in Toronto
+date_default_timezone_set('America/Toronto');
+$local = utcTolocalDate($utc);
+echo $local . " (America/Toronto)<br />\n";
+
+// Zurück in Berlin
+date_default_timezone_set('Europe/Berlin');
+$local = utcTolocalDate($utc);
+echo $local . " (Europe/Berlin)<br />\n";
+EOT
+)?></code></pre>
+
+<p>Ungefähr das teilt der Wichtel dem Weihnacksmann mit.</p>
+
+<p>Dieser blickt den Wichtel ein paar Sekunden zu lange schweigend an und nickt dann kurz.</p>
+
