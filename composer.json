@@ -4,9 +4,9 @@
             "type":"package",
             "package":{
                 "name":"phpsog/phpsog",
-                "version":"0.0.1",
+                "version":"0.0.3",
                 "dist":{
-                    "url":"https://github.com/mermshaus/phpsog/zipball/5884ec7a3cf4a744f318d38d21266d75bfdec9d9",
+                    "url":"https://github.com/mermshaus/phpsog/zipball/2aa778bb92222042677026eb62058da05d12d0ce",
                     "type":"zip"
                 },
                 "autoload":{
@@ -18,7 +18,9 @@
         }
     ],
     "require":{
-        "phpsog/phpsog":"0.0.1",
-        "kaloa/filesystem":"*"
+        "php":                      ">=5.3.2",
+        "phpsog/phpsog":            "0.0.3",
+        "kaloa/filesystem":         "dev-master",
+        "symfony/event-dispatcher": "2.0.12"
     }
 }
