@@ -1,8 +1,6 @@
 <?php
 
-namespace Phpsog;
-
-$title = 'MVC';
+$this->setTitle('MVC');
 
 ?>
 
@@ -32,7 +30,7 @@ $title = 'MVC';
 
 <p class="legend top">Listing 1: Auswahl und Aufruf einer Controller-Action in der Index-Datei</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 $controller = (isset($_GET['controller']))
             ? trim((string) $_GET['controller'])
             : 'index';
@@ -82,7 +80,7 @@ EOT
 
 <p class="legend top">Listing 2: Verzeichnisübersicht für index-Controller mit index-Action</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 .
 +--controllers
 |  `--index.php
@@ -97,7 +95,7 @@ EOT
 
 <p class="legend top">Listing 3: Beispiel für eine simple index.index-Action</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 function index_indexAction(&$appData)
 {
     $appData['pageTitle'] = 'Startseite';
@@ -116,7 +114,7 @@ EOT
 
 <p class="legend top">Listing 4: View-Script index.phtml</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 <h1>Willkommen auf meiner Homepage</h1>
 
 <p>Der Inhalt von 'Name' lautet: <?php echo escape($name); ?>.</p>
@@ -133,7 +131,7 @@ EOT
 
 <p>Die index.php im Root-Verzeichnis hat bisher die passende Action eines Controllers aufgerufen. Nun wird sie erweitert, um die Rückgabe dieser Action an das View-Script zu senden und die Rückgabe des View-Scripts selbst in einen HTML-Rahmen, das Layout, einzufügen und schließlich alle Ausgaben an den Browser zu senden.</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 <?php
 
 function url($controller, $action, array $params = array())
@@ -254,7 +252,7 @@ EOT
 
 <p class="legend top">Listing 5: Definition der Inhalte für den book-Controller</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 function book_getTopicList()
 {
     $topicsRootPath = './data/topics';
@@ -279,7 +277,7 @@ EOT
 
 <p class="legend top">Listing 6: Verzeichnisübersicht nach Anlegen des data-Verzeichnisses</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 .
 +--controllers
 |  +--book.php
@@ -301,7 +299,7 @@ EOT
 
 <p class="legend top">Listing 7: Gesamter Code von controllers/book.php</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 function book_getTopicList()
 {
     $topicsRootPath = './data/topics';
@@ -366,7 +364,7 @@ EOT
 
 <p class="legend top">Listing 8: View-Script views/book/_menu.phtml</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 <ul>
 <?php foreach ($topics as $title => $content) : ?>
 
@@ -395,7 +393,7 @@ EOT
 
 <p class="legend top">Listing 9: View-Script für book.index</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 <h1>Themenübersicht</h1>
 
 <?php echo loadViewScript('book', '_menu', array('topics' => $topics)); ?>
@@ -406,7 +404,7 @@ EOT
 
 <p class="legend top">Listing 10: View-Script für book.view</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 <h1><?php echo escape($title); ?></h1>
 
 <?php echo loadViewScript('book', '_menu', array('topics' => $topics)); ?>
@@ -437,21 +435,21 @@ EOT
 
 <p>Die bestehenden URIs der Beispielanwendung sehen teilweise sehr unhandlich aus. Hier etwa der Direktlink auf die „Kontrollstrukturen“-Page der „Informatik“-Section:</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 /?controller=book&action=view&section=Informatik&page=Kontrollstrukturen
 EOT
 )?></code></pre>
 
 <p>Wesentlich schöner wäre da beispielsweise diese Variante, die ohne GET-Parameter auskommt:</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 /book/view/section/Informatik/page/Kontrollstrukturen
 EOT
 )?></code></pre>
 
 <p>Dieser verbesserte URI lässt sich in folgendes Schema zerlegen:</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 /<Controller-Name>/<Action-Name>/<param1>/<value1>/<param2>/<value2>
 EOT
 )?></code></pre>
@@ -462,7 +460,7 @@ EOT
 
 <p class="legend top">Listing 11: Funktion requestUriToGetArray</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 function requestUriToGetArray()
 {
     $basePath     = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME);
@@ -491,7 +489,7 @@ EOT
 
 <p>Diese Funktion formt einen Eingabe-URI wie /book/view/section/Informatik/page/Kontrollstrukturen in folgendes $_GET-Array um:</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 Array
 (
     [controller] => book
@@ -512,7 +510,7 @@ EOT
 
 <p class="legend top">Listing 12: Veränderte Version der url-Funktion</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 function url($controller, $action, array $params = array())
 {
     $basePath = rtrim(pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME), '/');
@@ -545,7 +543,7 @@ EOT
 
 <p class="legend top">Listing 13: .htaccess-Datei mit Rewrite-Regeln</p>
 
-<pre><code><?=e(<<<'EOT'
+<pre><code><?=$this->escape(<<<'EOT'
 RewriteEngine On
 
 # Wenn eine Ressource existiert, liefere sie aus

@@ -10,7 +10,7 @@ $p = $pathToRoot;
 
     <head>
         <meta charset="UTF-8" />
-        <title><?=e($title)?></title>
+        <title><?=$this->escape($title)?></title>
         <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/normalize.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/dih5.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/overrides.css" />
