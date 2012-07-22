@@ -1,0 +1,213 @@
+<?php
+
+$this->setTitle('Jenseits des Servers oder was PHP sonst noch kann');
+
+?>
+
+<h1>Jenseits des Servers oder was PHP sonst noch kann</h1>
+
+<p>Elfriede ist verdutzt. Man lernt doch nie aus. Laut der vor ihr auf dem Bildschirm flackernden Webseite soll es möglich sein, auch mit PHP Kommandozeilenanwendungen zu erstellen. Dabei ist das doch etwas für echte Hacker. Schnell huscht sie in die Küche und kehrt bald darauf mit einer Kanne Tee und vielen Keksen zurück. PHP auf der Kommandozeile? Das muss sie ausprobieren.</p>
+
+<h2>„Hallo Welt!“</h2>
+
+<p>Im Grunde ist es denkbar einfach. PHP-Skripte werden von einem Interpreter ausgeführt. Dieser liegt als Anwendung vor und kann mit dem entsprechenden Skript als Argument aufgerufen werden. Elfriede tippt einen Test.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+<?php // hallo.php
+
+echo "Hallo Welt!\n"; 
+EOT
+)?></code></pre>
+
+<p>Dann ruft sie ihre Shell auf, navigiert in das entsprechende Verzeichnis und startet den Interpreter.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ php hallo.php
+Hallo Welt!
+EOT
+)?></code></pre>
+
+<p>Gar nicht übel. Geht das auch per <a href="http://de.wikipedia.org/wiki/Shebang">Hashbang</a>?</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ which php
+/usr/bin/php
+EOT
+)?></code></pre>
+
+<p>Elfriede setzt die Datei hallo.php auf ausführbar und fügt die entsprechende Zeile hinzu.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php // hallo.php
+
+echo "Hallo Welt!\n";
+EOT
+)?></code></pre>
+
+<p>Nun muss sie nur noch den Dateinamen angeben.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ ./hallo.php
+Hallo Welt!
+EOT
+)?></code></pre>
+
+<p>So langsam findet sie Gefallen an der Sache. Dann mal ran an echte Funktionalität.</p>
+
+
+
+<h2>Lesen von stdin</h2>
+
+<p>Das Einlesen von Daten funktioniert über die stdin-Schnittstelle (standard input).</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php // hallo.php
+
+$f = fopen('php://stdin', 'r');
+while (false !== ($char = fgetc($f))) {
+    echo strtoupper($char);
+}
+fclose($f);
+EOT
+)?></code></pre>
+
+<p>Daten können nun per Pipe oder Redirect an das Skript geschickt werden.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ echo 'Hallo Welt!' | ./hallo.php
+HALLO WELT!
+EOT
+)?></code></pre>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ ./hallo.php < hallo.php
+#!/USR/BIN/PHP
+<?PHP // HALLO.PHP
+
+$F = FOPEN('PHP://STDIN', 'R');
+WHILE (FALSE !== ($CHAR = FGETC($F))) {
+    ECHO STRTOUPPER($CHAR);
+}
+FCLOSE($F);
+EOT
+)?></code></pre>
+
+<p>„Cool“, murmelt Elfriede vor sich hin.</p>
+
+
+
+<h2>Kommandozeilenparameter (argc und argv)</h2>
+
+<p>Dem Programm können natürlich auch Argumente übergeben werden. Diese stehen automatisch im Array <var>$argv</var> (<i>argument vector</i>) zur Verfügung. Die Variable <var>$argc</var> (<i>argument count</i>) enthält zudem die Anzahl der Elemente in <var>$argv</var>. Der erste Eintrag in <var>$argv</var> ist das aufgerufene Script (etwa ./hallo.php).</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php // hallo.php
+
+$toUpper = true;
+
+if (in_array('--lower-case', $argv)) {
+    $toUpper = false;
+}
+
+$f = fopen('php://stdin', 'r');
+while (false !== ($char = fgetc($f))) {
+    if ($toUpper) {
+        echo strtoupper($char);
+    } else {
+        echo strtolower($char);
+    }
+}
+fclose($f);
+EOT
+)?></code></pre>
+
+Ausgeführt sieht das so aus:
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ echo 'Elfriede' | ./hallo.php | ./hallo.php --lower-case
+elfriede
+EOT
+)?></code></pre>
+
+
+
+<h2>Fehlerausgabe</h2>
+
+<p>Was passiert, wenn im Script ein Fehler auftritt? Elfriede forscht nach.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php // error.php
+
+throw new Exception('Nicht gut');
+EOT
+)?></code></pre>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ ./error.php
+Fatal error: Uncaught exception 'Exception' with message 'Nicht gut' in
+/home/elfriede/phpcli/error.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/elfriede/phpcli/error.php on line 4
+EOT
+)?></code></pre>
+
+<p>Das kommt Elfriede doch bekannt vor. Bleibt bloß die Frage, wie zwischen einer Fehlerausgabe und einer korrekten Ausgabe unterschieden werden kann. Dabei hilft der Rückgabewert (<i>error code</i>) des Programms, der entsprechend abgefragt werden kann. Im Normalfall beträgt dieser 0 (= kein Fehler), für error.php beträgt er 255.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ ./error.php
+    […]
+$ echo $?
+255
+EOT
+)?></code></pre>
+
+
+
+<h2>Interaktivität</h2>
+
+<p>CLI-Anwendungen (<i>command-line interface</i>) können während der Laufzeit neue Benutzereingaben entgegennehmen. Ob sich Elfriedes Kinder über die folgende Anwendung freuen werden?</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php // interactive.php
+
+$a = rand(1, 10);
+$b = rand(1, 10);
+
+printf("Wie viel ist %d*%d ?\n", $a, $b);
+
+$handle = fopen('php://stdin', 'r');
+$line   = fgets($handle);
+
+if ((int) $line === $a * $b) {
+    echo "Richtig!\n";
+} else {
+    echo "Leider falsch!\n";
+}
+EOT
+)?></code></pre>
+
+<p>Es gibt sicher bessere Weihnachtsgeschenke.</p>
+
+<p>Elfriede gähnt laut. So langsam fallen unserer Protagonistin vor Erschöpfung die Augen zu. Sie fährt den PC runter, putzt sich die Zähne und verschwindet unter einem Berg von Decken. Draußen rieselt der Schnee. In Elfriedes Kopf rieseln die Bytes.</p>
+
+
+
+<h2>Epilog</h2>
+
+<p>Als Elfriede am nächsten Morgen verschlafen aus dem Bett tappt, findet sie einen kleinen Zettel, den jemand in der Nacht unter der Tür durchgeschoben haben muss. Auf diesen Zettel sind hastig einige URLs und Beschreibungen gekritzelt. Ganz oben steht „CLI-Klassen in Bibliotheken und Frameworks (Auszug)“ und darunter:</p>
+
+<ul>
+<li><a href="http://ezcomponents.org/docs/tutorials/ConsoleTools">eZ Components ConsoleTools</a> (im Einsatz unter anderem in PHPUnit, installierbar über PEAR)</li>
+<li><a href="http://www.symfony-project.org/api/1_4/command">Symfony sfCommand</a> (installierbar über PEAR)</li>
+<li><a href="http://framework.zend.com/manual/en/zend.console.getopt.html">Zend Framework Zend_Console_Getopt</a></li>
+</ul>
+
+<p>„Es gibt nichts, was es nicht gibt“, wundert sich leise<br/>
+
+Elfriede</p>
