@@ -1,0 +1,82 @@
+Export-Vorgang
+==============
+
+Der Vorgang besteht darin, die Inhalte aus dem ./data/pages-Verzeichnis zu
+verarbeiten und als statische Inhalte (HTML, CSS, Grafiken, sonstige statische
+Ressourcen) in das ./export-Verzeichnis zu schreiben. Der Inhalt dieses
+Verzeichnisses ist das fertige „Buch“, das beliebig auf Webspace kopiert werden
+kann. Während des Export-Vorgangs wird etwa das grundlegende Seitenlayout um
+jede Inhaltsdatei gelegt, Seitentitel werden gesetzt, Hilfsfunktionen werden
+ausgeführt und dergleichen.
+
+Als Build-Tool wird derzeit phpsog[1] (PHP Static Output Generator) genutzt. Das
+Ausgangsformat, in dem die Inhalte von den Autoren geschrieben werden, ist
+momentan ausschließlich PHTML. Das bezeichnet HTML-Dateien, die auch Abschnitte
+von PHP-Code enthalten können, um gewisse Aufgaben zu erleichtern oder variable
+Inhalte einzubinden.
+
+Jede Datei mit der Endung „phtml“ innerhalb des ./data/pages-Verzeichnisses wird
+automatisch in den Export-Vorgang einbezogen. phpsog „kompiliert“ die Datei
+(führt den enthaltenen PHP-Code aus), setzt den erzeugten Inhalt in ein Layout
+ein und speichert das fertige Dokument mit der Endung „html“ im ./export-
+Verzeichnis. Aus ./data/pages/test.phtml würde ./export/test.html, aus
+./data/pages/foo/bar.phtml würde ./export/foo/bar.html.
+
+Während des Kompiliervorgangs stellt phpsog den einzelnen PHTML-Dateien einen
+Ausführungskontext (ein API) bereit, mit dem per PHP-Code interagiert werden
+kann. Über diesen Kontext kann jede Inhaltsseite etwa einen eigenen Seitentitel
+(<title>-Tag) festlegen oder Zugriff auf zentral definierte Hilfsfunktionen
+(beispielsweise zum Escaping) erlangen.
+
+Konkret belegt phpsog dazu vor der Verarbeitung der PHTML-Datei die Variable
+$this vor[2], über die die folgenden Methoden angesprochen werden können[3]:
+
+    escape(<string>)      Wandelt HTML-Syntaxzeichen (<>"'&) in Entitäten um.
+
+    setTitle(<string>)    Setzt den Seitentitel der aktuellen Seite.
+
+In Layout-Dateien (derzeit nur ./data/layouts/default.phtml) stehen zusätzlich
+dazu noch einige weitere Variablen bereit:
+
+    $pathToRoot    Wichtig für Verlinkung zentraler Ressourcen aus
+                   Unterverzeichnissen.
+
+    $title         Der gesetzte Seitentitel.
+
+    $content       Der generierte Inhalt für die aktuell bearbeitete
+                   Inhaltsseite.
+
+Eine Erweiterung des API ist geplant.
+
+
+
+phpsog vs. Sphinx vs. DocBook vs. X
+===================================
+
+webdevbuch nutzt phpsog primär deshalb, weil davon ausgegangen wird, dass die
+Voraussetzung „PHP“ für die meisten Nutzer unproblematischer zu erfüllen ist als
+„Python“ oder „Apache FOP“. phpsog ist zudem so konzipiert, dass Unterstützung
+für weitere Eingabeformate (XML, Markdown, …) gleichberechtigt ergänzt werden
+kann.
+
+Es ist bis auf Weiteres eine bewusste Entscheidung, hinsichtlich der genutzten
+Technologien möglichst anspruchslos zu sein. Die These ist, dass das Potenzial
+von Projekten dieser Art durch einen zu hohen Grad an Komplexität geschmälert
+wird und dass Anpassungen „von Hand“ im Gegenzug längst nicht so umständlich
+sind, wie vielleicht angenommen wird. Zudem ist HTML ein semantisches Format,
+das sich relativ gut in andere Formate konvertieren lässt.
+
+
+
+1: https://github.com/mermshaus/phpsog
+
+2: In Wahrheit ist das ein Effekt, der sich daraus ergibt, dass jede PHTML-Datei
+   innerhalb einer Methode einer phpsog-Klasse inkludiert wird. $this ist
+   deshalb zwangsläufig belegt. Dieses Wissen ist aus Sicht von webdevbuch aber
+   unwichtig.
+
+3: Technisch gesehen besteht über $this Zugriff auf sämtliche Methoden und
+   Instanzvariablen der umgebenden phpsog-Klasse. Dennoch dürfen nur die hier
+   aufgelisteten als zur API gehörig betrachtet werden. Das hat vor allem damit
+   zu tun, dass von phpsog noch keine echte Release-Version mit verlässlichen
+
