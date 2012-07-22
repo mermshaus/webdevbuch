@@ -5,3 +5,46 @@ $this->setTitle('Knoten am andern Ende');
 ?>
 
 <h1>Knoten am andern Ende</h1>
+
+<p>Betrachtet man einen gewöhnlichen Request hin zu einem WebServer wie Apache oder auch Lighthttpd, der wiederum ein PHP-Skript ausliefert, so wird pro Request ein Thread erzeugt, der sequentiell seine Arbeit verrichtet. Dieses Modell hat sich seit Jahren für viele Anwendungen bewährt, hat jedoch seine Probleme beim Skalieren von Echtzeit-Anwendungen oder langlebigen Verbindungen.</p>
+
+<p>Javascript wurde bisher traditionell hauptsächlich im Browser des Benutzers ausgeführt und spielte bisher auf dem Server keine große Rolle. Dies änderte sich in letzter Zeit ein wenig durch verschiedene Projekte wie <a href="http://jaxer.org/">Jaxer</a>, <a href="http://narwhaljs.org/">Narwhal</a> oder auch <a href="http://www.commonjs.org/">CommonJS</a>. Ein aus der Reihe tanzender und im Moment hochgehandelter Vertreter dieser Reihe ist <a href="http://nodejs.org/">node.js</a>, der viele der aktuellen Probleme lösen kann.</p>
+
+<p>Node.js ist ein ausführbares Kommandozeilen-Tool, das auf dem jeweiligen System erst kompiliert werden muss. Es basiert auf prominenten Tools wie Googles V8 JavaScript Runtime sowie den Perl-Komponenten <i>libaio</i> sowie <i>libev</i>. Dabei stellt die Bibliothek im Wesentlichen Objekte zur Verfügung, über deren Methoden sich das Betriebssystem ansprechen lässt. Javascript als Programmiersprache eignet sich für das Node.js-Konzept hervorragend, da man durch anonyme Funktionen sowie Closures ein bewährtes Mittel zur Hand hat, mit dem sich Callbacks leicht definieren lassen. Zudem kann ein Javascript-Programmierer idealerweise bereits mit Events umgehen und kommt mit der Syntax zurecht.</p>
+
+<p>Ein klassischer Webserver wartet die meiste Zeit auf das Beenden von langsamen Operationen. Dies sind in aller Regel I/O-Operationen (Festplatte/Netzwerk), da diese wesentlich langsamer sind als Operationen, die im Arbeitsspeicher stattfinden. Im klassischen Fall einer PHP-Anwendung würde der Client solange auf den Content warten müssen (ohne Caching-Mechanismen), bis alles komplett abgearbeitet wurde. In einer Operation von 10 Datenbank-Queries a 10ms wären das bereits 100ms.</p>
+
+<p>Node profitiert hier im Vergleich mit der klassischen Applikation von seinem grundsätzlich asynchronen Charakter. Sofern die Datenbank parallele Requests abarbeiten kann, werden alle 10 Anfragen nahezu parallel bearbeitet, womit die langsamste Anfrage die Reaktionszeit bestimmen würde. Stark vereinfacht würde – auf das obere Beispiel bezogen – ein Durchlauf in Node.js nur etwa ein Zehntel der Zeit beanspruchen. Aber warum?</p>
+
+<p>Die Antwort liegt im Prinzip der Bibliothek. Diese profitiert davon, dass Javascript von vornherein für Events erdacht wurde und läuft im Unterschied zum klassischen Thread der Webserver-Anfrage in einem einzigen Event-Loop ab, sprich in einem einzigen Thread oder einfach gesprochen in einer ewigen <code>while</code>-Schleife. Da jede Operation einen asynchronen Request darstellt, bringt node.js auch seinen eigenen Observer mit. Node.js’ „EventEmitter“ abstrahiert hierbei das Binding, Unbinding oder auch Feuern/Triggern von Events und kann an sehr viele Operationen angebunden werden (inkl. aller I/O-Operationen). Dieser Loop beinhaltet beliebig viele Objekte und wird permanent durchlaufen. Jeder Request an das Betriebssystem läuft für den Programmierer grundsätzlich asynchron ab. Beim nächsten Durchlauf durch den Event-Loop registriert node.js jegliche Veränderung und feuert die jeweiligen Events, die wiederum definierte Callbacks aufrufen.</p>
+
+<p>Oder kurz und knackig beschrieben:</p>
+
+<ul>
+<li>Nie auf das Ergebnis warten, sondern einfach weitermachen.</li>
+<li>alles parallel mit Ausnahme des Codes</li>
+<li>Ziel ist es hierbei, eine Programmierumgebung zu schaffen, die nie blockiert und gleichzeitig auf unglaublich viele Anfragen reagieren kann.</li>
+</ul>
+
+<p>Node.js’ event-basiertes Modell macht es dem Entwickler einfach, Applikationen in Echtzeit zu skalieren, ist jedoch zunächst sehr ungewohnt und bringt eine andere Komplexität in eine vorher klar strukturierte Anwendungsstruktur, an die man sich vielleicht erst gewöhnen muss.</p>
+
+<p>Ein node.js-Skript beginnt immer mit einem <code>require</code>-Teil der Module bzw. Addons am Anfang des Skripts. Dies ist der einzige Teil der Anwendung, der nicht parallel ausgeführt wird. Es gibt bereits einen sehr großen Teil an (externen) Modulen mit, so dass man sich nicht um alles selbst kümmern muss (und auch nicht sollte). Eine Liste der Module kann man dem <a href="https://github.com/ry/node/wiki/modules">Projekt-Wiki</a> entnehmen.</p>
+
+<p>Alternativ kann man dazu ihren Paketmanager <i>npm</i> verwenden, der das Installieren von Modulen per Terminal vereinfacht (<code>$ npm install modulname</code>).</p>
+
+<p>Da die Bibliothek noch keine 2 Jahre alt ist, existieren vielleicht noch nicht für alle benötigten Schnittstellen Module bzw. Addons, mit denen man gerne arbeiten möchte. Sollte man in dem Fall dennoch mit node.js arbeiten wollen, heißt es in jedem Fall selbst Hand anlegen. Teilweise lassen sich auch in C geschriebene Bibliotheken einbauen. Falls das alles nicht in Frage kommt, sollte man noch die Finger von node.js lassen.</p>
+
+<p>Datei-Uploads und -Downloads sind Streams, können aber vom HTTP-Protokoll in der Abstraktion der Frameworks nur in ihrer Vollständigkeit betrachtet werden. Node.js macht es z.B. möglich, hochgeladene File-Chunks parallel weiterzustreamen oder zu bearbeiten.</p>
+
+<p>Node.js bietet unglaubliche Möglichkeiten, einige interessante Ideen-Fundstücke habe ich euch aufgelistet.</p>
+
+<ul>
+<li>Web-Sockets und node.js => Ajax-Chat</li>
+<li>Client-Loadbalancer</li>
+<li>Flash-Alternative für File-Uploads in Echtzeit</li>
+<li>(Formularvalidierungs-) Logik zwischen Client und Server hin- und herschieben</li>
+<li>Inkrementelles Rendering von Seiteninhalten über „zerstückelte“ HTML-Fragmente, asynchrones Ausliefern einer HTML-Datei</li>
+</ul>
+
+<p>Euer Weihnacksmann</p>
+
