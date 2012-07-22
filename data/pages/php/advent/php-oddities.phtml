@@ -53,7 +53,7 @@ EOT
 
 <p>Allgemein ist es deshalb auch bei Funktionsaufrufen unnötig, Parameter als Referenzen anzugeben, nur um Speicherplatz zu sparen. Solange im Funktionskörper der Inhalt der übergebenen Variablen nicht verändert wird, verweist die Variable auf denselben Speicherinhalt wie ihr Pendant außerhalb des Funktionskörpers, wodurch kein zusätzlicher Speicherplatz verbraucht wird.</p>
 
-<p>Die Parameterübergabe sowohl von primitiven Datentypen (<code>float</code>, <code>string</code>, …) als auch von Objekten geschieht standardmäßig als Call-by-value. Auch Objekte werden nur dann by-reference übergeben, wenn dies durch das &-Zeichen in der Funktionssignatur explizit vermerkt ist. Der Inhalt (im Sinne von <i>value</i>) einer Objektvariablen sind nicht die Instanzdaten selbst, sondern eine Art Ressourcen-Kennung (<i>Object-Identifier</i>), über die PHP auf die Instanzdaten zugreift.</p>
+<p>Die Parameterübergabe sowohl von primitiven Datentypen (<code>float</code>, <code>string</code>, …) als auch von Objekten geschieht standardmäßig als Call-by-value. Auch Objekte werden nur dann by-reference übergeben, wenn dies durch das &amp;-Zeichen in der Funktionssignatur explizit vermerkt ist. Der Inhalt (im Sinne von <i>value</i>) einer Objektvariablen sind nicht die Instanzdaten selbst, sondern eine Art Ressourcen-Kennung (<i>Object-Identifier</i>), über die PHP auf die Instanzdaten zugreift.</p>
 
 <pre><code><?=$this->escape(<<<'EOT'
 // Call-by-value
