@@ -1,0 +1,103 @@
+<?php
+
+$this->setTitle('Schönes Klickibunti und mehr…');
+
+?>
+
+<h1>Schönes Klickibunti und mehr…</h1>
+
+<p>Jeder, der sich viel mit der Frontend-Entwicklung von Webseiten beschäftigt hat, stolpert über kurz oder lang über das Javascript-Framework <a href="http://jquery.com/">jQuery</a>. Im Moment hat es den Anschein, als ob jeder dabei sein und keiner den Zug verpassen wolle. jQuery-Code ist herrlich einfach und wunderbar zu lesen. Noch dazu, wo jQuery vor wenigen Tagen den „Packt Publishing Award“ als beste Open-Source-JavaScript-Bibliothek gewonnen hat.</p>
+
+<p>Natürlich entging das auch nicht dem Webteam der Nordweih24 GmbH. Hatte man doch schon seit Briefposttagen, Höhlenmalereien und uralten Flaschenpostwunschzetteln das Anspruchsdenken verinnerlicht, diejenige Agentur mit dem denkbar einfachsten Benutzerinterface auf dem Markt zu sein. Dies dürfte sich auch im 21. Jahrhundert nicht ändern. Schließlich hatte der Weihnacksmann persönlich in einer hausinternen Memo nachgehakt, ob denn die „Gui“ immer noch „up to date“ sei. So musste das PHP-Team der Nordweih24 GmbH ran zur Umschulung, man hatte ja schließlich einen Ruf zu verlieren.</p>
+
+<p>Schnell stießen die Entwickler bei Recherechen auf <a href="http://jqueryui.com/">jQueryUI</a> und waren ob der Möglichkeiten dieser Erweiterungen begeistert, da sie modularen Code fanden, der Events feuerte und gegen ein sauber definiertes Interface entwickelt worden war. Noch dazu bekamen sie mit der Bibliothek ein CSS-Framework mitgeliefert, das selbst die feuerspuckenden Höllenbrowser aus Redmond besänftigte.</p>
+
+<p>Die neue Wunschzettel-Oberfläche stand schnell in Grundzügen, doch leider konnte auch diese Erweiterung nur den Grundstock der neuen „blingbling-UI“ (wie sie der Weihnacksmann gerne schelmisch bezeichnete) bilden. So mussten die Entwickler schnell einsehen, dass man im Team gezwungen war, selbst die Wichtelgriffel anzulegen. Da schnelles Handeln geboten war und jeder zunächst eigene Vorstellungen hatte, einigten sie sich nach kurzer Diskussion auf die Verwendung von <code>$.widget</code>, der Basis des jQueryUI-Frameworks.</p>
+
+<p><code>$.widget</code> hatte in ihren Augen viele Vorzüge. So konnten sie in den Objekten javascript-unüblich durch die Verwendung eines Unterstriches vor dem Methodennamen elegant zwischen protected und public Methoden unterscheiden. Natürlich sollte das alles nicht mit dem Namespace von jQueryUI kollidieren, so dass schon nach kurzer Recherche folgender Code auf dem Papier stand:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+(function($) { 
+    $.widget('nordweih.rentier', { 
+        options: { 
+            autoBoost : true 
+        } ,
+        _create: function () { 
+        }, 
+        _init: function () { 
+        },
+EOT
+)?></code></pre>
+
+<p>Die Entwickler bemerkten schnell, dass die Methode <code>_create()</code> den Konstruktor des zu erzeugenden Widgets darstellt.</p>
+
+<p>Hingegen wurde mit jedem Aufruf des Rentier-Widgets <code>_init()</code> aufgerufen. Hooks kannten einige aus dem PHP-Team bereits aus verschiedenen PHP-Frameworks, so war schnell klar, dass hier Optionen wie autoBoost abgefragt werden sollten:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+        // ..
+        _init : function () { 
+            var o = this.options; 
+            if(o.autoBoost && !o.disabled) { 
+                this.boost(); 
+            } 
+        },
+        // ..
+EOT
+)?></code></pre>
+
+<p>EventListener für das Widget konnten durch <code>_trigger('eventname')</code> deklariert werden. Das war besonders hilfreich, wenn das Rentier auf keinen Fall ohne den Weihnacksmann losgalloppieren durfte. So war es möglich, von außen über den selbsterzeugten Event zu steuern, ob schon alle Startbedingungen erfüllt waren.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+        move : function () 
+            if (this._trigger('beforemove') === false) { 
+                return; 
+            } 
+            /** 
+             * move code 
+             */ 
+            // der "after" move event 
+            this._trigger('move', event, data); 
+        }  
+EOT
+)?></code></pre>
+
+<p>Ansprechen konnte man das Event wie den <code>click</code>-Event auch, über einen Bind an das Element, in diesem Fall <var>Rudolf</var>.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$('#rudolf').bind('rentierbeforemove', function () {
+    return checkForWeihnacksmann();
+});  
+EOT
+)?></code></pre>
+
+<p>Um sicher zu stellen, dass auch wirklich immer nur ein Rentier das Haus verließ, mussten jetzt noch sichergestellt werden, dass alle anderen heimkehrten, bevor Rudolf lossprintete. Schnell wurde die durch jQueryUI bereitgestellte Möglichkeit ausgelotet, alle anderen Instanzen eines Widgets über einen Pseudo-Selektor ausfindig zu machen. Somit mussten sie sich noch nicht einmal um das Halten aller Instanzen kümmern. Gesagt, getan, <code>move()</code> wurde dementsprechend aufgebohrt:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+    move : function () { 
+    if(this._trigger('beforemove') === false){ 
+                return; 
+            } 
+            $(':nordweih-rentier')
+                .not(this.element) 
+                .rentier('flyhome'); 
+            // ..  
+EOT
+)?></code></pre>
+
+<p>Um das Aufräumen kümmerte sich <code>$.widget</code> auch schon, sofern sich nichts am Original-Element verändert hatte. Und wenn doch, so hatten sie auch hier die Möglichkeit, gezielt einzugreifen. Der jQueryUI-Destruktor:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+       destroy : function () { 
+            this.rentier.dialog("destroy"); 
+            if( this.element.is($('#rudolf')) {
+                // mach etwas besonderes
+            }
+            $.Widget.prototype.destroy.apply(this, arguments); 
+        }
+EOT
+)?></code></pre>
+
+<p>Innerhalb kürzester Entwicklungszeit war es mit diesen einfachen Methoden möglich, saubere und auch vererbbare Widgets zu schreiben (wie das geht, lässt sich sehr schön <code><a href="http://jqueryui.com/demos/draggable/">$.ui.draggable</a></code>-Beispiel entnehmen).</p>
+
+<p>Und die Moral von der Geschicht’: jQueryUI bringt’s, warum verwendest du’s noch nicht?</p>
+
