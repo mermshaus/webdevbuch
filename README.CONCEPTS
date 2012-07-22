@@ -79,4 +79,5 @@ das sich relativ gut in andere Formate konvertieren lässt.
    Instanzvariablen der umgebenden phpsog-Klasse. Dennoch dürfen nur die hier
    aufgelisteten als zur API gehörig betrachtet werden. Das hat vor allem damit
    zu tun, dass von phpsog noch keine echte Release-Version mit verlässlichen
+   Schnittstellendefinitionen vorliegt.
 
