@@ -1,0 +1,194 @@
+<?php
+
+$this->setTitle('Don’t panic! The Hitchhiker’s Guide to PHP oddities');
+
+?>
+
+<h1>Don’t panic! The Hitchhiker’s Guide to PHP oddities</h1>
+
+<p>Das Jahr geht langsam zur Neige, draußen wird es immer kälter und dunkler. Wer abends nicht mehr unbedingt vor die Tür muss, bleibt lieber zu Hause, trinkt Kakao, isst Lebkuchen und Christstollen, bastelt kleine Tiere aus Kastanien und sieht dicken roten Wachskerzen beim Runterbrennen zu.</p>
+
+<p>Diese vorweihnachtliche Atmosphäre ist ja ganz wunderbar friedvoll, aber mitunter eben auch ein wenig langweilig. Höchste Zeit also, die grauen Zellen ein wenig in Schwung zu bringen und sich mit Programmierung zu beschäftigen, genauer: mit einigen der merkwürdigeren oder oftmals verwirrenden Punkten der PHP-Programmierung.</p>
+
+
+
+<h2 id="floats">Vergleiche mit Fließkommazahlen</h2>
+
+<p>Fangen wir einfach an. Was liefert die folgende Zeile?</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+var_dump((0.1+0.5)*10 == 6);
+EOT
+)?></code></pre>
+
+<p>Klar, die Rückgabe ist <code>bool(true)</code>, wie leicht nachzurechnen ist. Aber wie sieht es bei folgender Rechnung aus?</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+var_dump((0.1+0.7)*10 == 8);
+EOT
+)?></code></pre>
+
+<p>Hier erhalten wir <code>bool(false)</code>. Die <a href="http://php.net/manual/en/language.types.float.php">PHP-Dokumentation weiß dazu</a>:</p>
+
+<blockquote><p>It is typical that simple decimal fractions like <i>0.1</i> or <i>0.7</i> cannot be converted into their internal binary counterparts without a small loss of precision. This can lead to confusing results: for example, <i>floor((0.1+0.7)*10)</i> will usually return <i>7</i> instead of the expected <i>8</i>, since the internal representation will be something like <i>7.9</i>.</p>
+
+<p>[…]</p>
+
+<p>So never trust floating number results to the last digit, and <strong>never compare floating point numbers for equality</strong>. [Hervorhebung hinzugefügt.]</p></blockquote>
+
+<p>Ein guter Rat, der natürlich nicht nur für die Sprache PHP gilt.</p>
+
+
+
+<h2 id="copy-on-write">Copy-on-write und Call-by-reference</h2>
+
+<p>PHP nutzt die <a href="http://en.wikipedia.org/wiki/Copy-on-write">Copy-on-write-Strategie</a> bei der Speicherverwaltung für Variableninhalte. Nach dieser Strategie werden Inhalte erst dann physisch kopiert, wenn ein Schreibzugriff erfolgt.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = str_repeat('X', 1000 * 1000); // ~1 MB Speicherverbrauch
+$b = $a;                           // ~1 MB Speicherverbrauch
+$b .= 'X';                         // ~2 MB Speicherverbrauch (Copy-on-write)
+EOT
+)?></code></pre>
+
+<p>Allgemein ist es deshalb auch bei Funktionsaufrufen unnötig, Parameter als Referenzen anzugeben, nur um Speicherplatz zu sparen. Solange im Funktionskörper der Inhalt der übergebenen Variablen nicht verändert wird, verweist die Variable auf denselben Speicherinhalt wie ihr Pendant außerhalb des Funktionskörpers, wodurch kein zusätzlicher Speicherplatz verbraucht wird.</p>
+
+<p>Die Parameterübergabe sowohl von primitiven Datentypen (<code>float</code>, <code>string</code>, …) als auch von Objekten geschieht standardmäßig als Call-by-value. Auch Objekte werden nur dann by-reference übergeben, wenn dies durch das &-Zeichen in der Funktionssignatur explizit vermerkt ist. Der Inhalt (im Sinne von <i>value</i>) einer Objektvariablen sind nicht die Instanzdaten selbst, sondern eine Art Ressourcen-Kennung (<i>Object-Identifier</i>), über die PHP auf die Instanzdaten zugreift.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+// Call-by-value
+function f($a) {
+    $a = null;
+}
+
+// Call-by-reference
+function g(&$a) {
+    $a = null;
+}
+
+$s = 'foo'; f($s); var_dump($s); // string(3) "foo"
+$s = 'foo'; g($s); var_dump($s); // NULL
+
+$o = new stdClass(); f($o); var_dump($o); // object(stdClass)#1 (0) { }
+$o = new stdClass(); g($o); var_dump($o); // NULL
+EOT
+)?></code></pre>
+
+
+
+<h2 id="inkrement">Inkrement-Operatoren in Berechnungen</h2>
+
+<p><em>Achtung: Die folgenden Angaben in diesem Abschnitt sind in hohem Maße spekulativ und stellen eine Analyse der Symptome dar, keine fundierte Erklärung. Einfache Tests haben ergeben, dass verschiedene Programmiersprachen (C, Java, PHP) Ausdrücke mit Inkrement-Operatoren auf sehr unterschiedliche Weise auswerten. Es kann an dieser Stelle deshalb nur empfohlen werden, im Umgang mit ihnen besondere Vorsicht walten zu lassen und Befehlsketten mit „Side-Effect-Operatoren“, also Wertveränderungen während der Auswertung, möglichst in mehrere Einzelbefehle aufzuspalten, da das Verhalten an dieser Stelle nicht immer definiert oder vorhersehbar ist.</em></p>
+
+<p>Handelte es sich bei den beiden vorherigen Punkten um allgemeingültiges Wissen, so geht es hier um eine eher PHP-spezifische Eigenart. Was liefert dieser Ausdruck?</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = 1;
+var_dump($a + ++$a);
+EOT
+)?></code></pre>
+
+<p>Zu erwarten wäre wohl <code>int(3)</code> (1+2), tatsächlich ist das Ergebnis aber <code>int(4)</code> (2+2).</p>
+
+<p>Dagegen liefert dieser Ausdruck</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = 1;
+var_dump($a + 0 + ++$a);
+EOT
+)?></code></pre>
+
+<p>dann schließlich doch das erwartete <code>int(3)</code>.</p>
+
+<p>Dieses eigenartige Verhalten ist wahrscheinlich darauf zurückzuführen, dass PHP variable Werte in Berechnungen erst zum spätest möglichen Zeitpunkt in ihren jeweiligen Wert auflöst, um temporäre Variablen zu sparen. Im ersten Ausdruck wird <code>($a + (++$a))</code> gerechnet, im zweiten <code>(($a + 0) + (++$a))</code>. Die Auswertung der Klammern findet von innen nach außen und auf gleicher Ebene von links nach rechts statt.</p>
+
+<p>Konsequenterweise ergibt</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = 1;
+var_dump($a + (0 + ++$a));  
+EOT
+)?></code></pre>
+
+<p>dann wiederum <code>int(4)</code>. Assoziativgesetz, we hardly knew ye.</p>
+
+<p><em>(Eine Diskussion dieses Themas fand unter anderem in <a href="http://www.phpforum.de/forum/showthread.php?t=256815">diesem Thread</a> statt.)</em></p>
+
+
+
+<h2 id="referenzen-foreach">Referenzen und foreach-Schleifen</h2>
+
+<p>Ein weiterer Klassiker, dem jeder früher oder später begegnet, ist der Einsatz von Referenzen innerhalb von foreach-Schleifen. Die Kurzversion:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = range(1, 5);
+
+foreach ($a as &$ref);
+var_dump(implode(', ', $a));
+
+foreach ($a as $ref);
+var_dump(implode(', ', $a));
+EOT
+)?></code></pre>
+
+<p>Die Rückgabe sieht so aus (man beachte die 4 am Ende der zweiten Zeile):</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+string(13) "1, 2, 3, 4, 5"
+string(13) "1, 2, 3, 4, 4"
+EOT
+)?></code></pre>
+
+<p>Nach dem Durchlauf der ersten Schleife ist <var>$ref</var> eine Referenz auf das letzte Array-Element. Das Verändern des Inhalts von <var>$ref</var> würde also gleichzeitig den Inhalt des letzten Array-Elements verändern. Genau das geschieht in der zweiten foreach-Schleife, in der <var>$ref</var>, also auch das letzte Array-Element, der Reihe nach auf jedes vorherige Element von <var>$a</var> gesetzt wird und in einem letzten Schritt auf sich selbst.</p>
+
+<p>In diese „Falle“ ist immer dann leicht zu tappen, wenn der Inhalt eines Arrays ausgegeben, aber vorher noch geringfügig angepasst werden soll.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+// Beispiel von: http://www.selfphp.de/forum/showthread.php?t=23503
+
+$filme = array('film1', 'film2', 'film3');
+
+foreach ($filme as &$film)
+  $film = ucfirst($film);
+
+foreach ($filme as $key=>$film)
+  echo "$key $film <br />";
+EOT
+)?></code></pre>
+
+<p>Abhilfe schafft <code>unset($film);</code> nach der ersten Schleife.</p>
+
+
+
+<h2 id="unerreichbarer-index">Unerreichbare Array-Indizes</h2>
+
+<p> Zum Abschluss noch ein Beispiel aus der Abteilung „Kurioses“, das vielleicht sogar als Bug bezeichnet werden könnte.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = array('10' => 'foo');
+
+$b = (array) json_decode(json_encode($a));
+
+$b['10'] = 'bar';
+$b[10] = 'baz';
+
+var_dump($b);                  // array(2) { ["10"]=> string(3) "foo"
+                               //            [10]=> string(3) "baz" }
+
+var_dump($b[10], $b['10']);    // string(3) "baz" string(3) "baz"
+EOT
+)?></code></pre>
+
+<p>Der Aufruf der beiden JSON-Funktionen erstellt ein Objekt mit einer öffentlichen Instanzvariable <code>$10</code>. Diese wird als Index in das Array gesetzt, ohne dass eine Typenkonvertierung stattfindet. Der Array-Index <code>string("10")</code> ist nun nicht mehr ansprechbar, da jeder Zugriffsversuch vom Interpreter auf den Index <code>int(10)</code> weitergeleitet wird.</p>
+
+<p>Es ist allerdings möglich, auf eine öffentliche Instanzvariable <code>$10</code> zuzugreifen.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$a = array('10' => 'foo');
+
+$b = json_decode(json_encode($a));
+
+var_dump($b->{'10'});    // string(3) "foo"
+EOT
+)?></code></pre>
+
