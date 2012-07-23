@@ -1,0 +1,154 @@
+<?php
+
+$this->setTitle('Parameter, Backticks, UNIX und andere Verrücktheiten');
+
+?>
+
+<h1>Parameter, Backticks, UNIX und andere Verrücktheiten</h1>
+
+<p>PHP wird in den allermeisten Fällen für die Programmierung von Webapplikationen und kleinen Serverskripten genutzt, doch kann PHP mehr. Insbesondere unter UNIX-System lassen sich mit PHP noch eine ganze Menge interessanter Dinge jenseits des Webservers anstellen. Zwar gilt dies auch für Windows-Systeme, doch wer einmal unter Windows auf der Konsole gearbeitet hat (wohlgemerkt auf der nativen, nicht auf der PowerShell), der wird schnell gemerkt haben, dass diese Art der Arbeit nicht gerade die Stärke dieses Betriebssystems ist. UNIX-Systeme bieten hingegen einen deutlich komfortableren Umgang mit der Konsole und Kommandozeilentools und darum soll es hier gehen: um die Arbeit mit PHP auf der Shell sowie die Interaktion von PHP und Shell.</p>
+
+<p>Fangen wir zunächst mit dem Command-Line-Interface (CLI) von PHP an. An dieser Stelle sollen nicht allzu viele Worte über die generelle Programmierung für das CLI verloren werden, da dies schon in Türchen 1 ausreichend beleuchtet wurde. Kümmern wir uns also eher um die Parameter und das Programm <code>php</code> selbst sowie dessen Benutzung auf der Shell.</p>
+
+<p>Sofern nicht mit der Configure-Option <code>--disable-cli</code> kompiliert, bietet PHP dieses SAPI standardmäßig an. Der Name SAPI ist an dieser Stelle ein bisschen irreführend, da er ausgeschrieben „Server Application Programming Interface“ heißt und wir ja gerade unabhängig von Serverdiensten arbeiten wollen, doch soll uns das hier nicht weiter stören.</p>
+
+<p>Schauen wir uns also zunächst die CLI-Optionen von PHP an. Eine Man-Page gibt es nicht, doch ein simples</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ php --help
+EOT
+)?></code></pre>
+
+<p>tut es auch. Die Ausgabe:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+Usage: php [options] [-f] <file> [--] [args...]
+       php [options] -r <code> [--] [args...]
+       php [options] [-B <begin_code>] -R <code> [-E <end_code>] [--] [args...]
+       php [options] [-B <begin_code>] -F <file> [-E <end_code>] [--] [args...]
+       php [options] -- [args...]
+       php [options] -a
+
+  -a               Run as interactive shell
+  -c <path>|<file> Look for php.ini file in this directory
+  -n               No php.ini file will be used
+  -d foo[=bar]     Define INI entry foo with value 'bar'
+  -e               Generate extended information for debugger/profiler
+  -f <file>        Parse and execute <file>.
+  -h               This help
+  -i               PHP information
+  -l               Syntax check only (lint)
+  -m               Show compiled in modules
+  -r <code>        Run PHP <code> without using script tags <?..?>
+  -B <begin_code>  Run PHP <begin_code> before processing input lines
+  -R <code>        Run PHP <code> for every input line
+  -F <file>        Parse and execute <file> for every input line
+  -E <end_code>    Run PHP <end_code> after processing all input lines
+  -H               Hide any passed arguments from external tools.
+  -s               Output HTML syntax highlighted source.
+  -v               Version number
+  -w               Output source with stripped comments and whitespace.
+  -z <file>        Load Zend extension <file>.
+
+  args...          Arguments passed to script. Use -- args when first argument
+                   starts with - or script is read from stdin
+
+  --ini            Show configuration file names
+
+  --ri <name>      Show configuration for extension <name>.
+EOT
+)?></code></pre>
+
+<p>Die meisten Kommandos sollen an dieser Stelle uninteressant bleiben, konzentrieren wir uns auf drei von ihnen: <code>-a</code>, <code>-f</code> und <code>-r</code>. Die erste Option <code>-a</code> führt eine interaktive PHP-Shell aus mit einem eigenen Prompt:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ php -a
+Interactive shell
+
+php >
+EOT
+)?></code></pre>
+
+<p>Hier lassen sich, wie vielleicht vom MySQL-CLI gewohnt, einzelne PHP-Befehle eintippen. Eine Zeile wird wie gewöhnlich mit einem Semikolon abgeschlossen. Mit <code>exit</code> lässt sich die Shell wieder beenden.</p>
+
+<p>Die beiden verbleibenden Optionen <code>-f</code> und <code>-r</code> lassen sich nutzen, um PHP-Code direkt per Eingabe (<code>-r</code>) oder aus einer Datei (<code>-f</code>) auszuführen. Letzteres ist übrigens auch ohne Parameter möglich, indem einfach der Dateiname direkt dem Kommando <code>php</code> übergeben wird.</p>
+
+<p>Mit PHP lässt sich auf der Kommandozeile also arbeiten und somit lassen sich auch Skripte für die Kommandozeile zu schreiben. Normalerweise wird hierfür die Shell-eigene Skriptsprache genutzt (meist entweder Bourne- oder C-Syntax, je nach Shell) oder Perl, doch lässt sich PHP genauso nutzen. Es ist jedoch nicht sonderlich komfortabel, immer den Befehl <code>php</code> schreiben zu müssen, um ein Skript auszuführen, weshalb es unter UNIX die sogenannte <i>Magic Line</i> oder auch <i>Shebang</i> bzw. <i>Hashbang</i> am Anfang ausführbarer Skripte, welches bereits aus Türchen 1 bekannt sein sollte. Da dies jedoch UNIX-spezifisch ist, soll es hier noch einmal erwähnt werden. Um PHP-Dateien also direkt ausführen zu können, reichen eine Shebang-Sequenz sowie entsprechende Ausführungsrechte. Unser Skript:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/usr/bin/php
+<?php
+echo "Hello World!\n";
+EOT
+)?></code></pre>
+
+<p>Der Linefeed am Ende des Strings ist auf der Kommandozeile wichtig, da sonst der nachfolgende Shell-Prompt in der gleichen Zeile wie die Ausgabe stünde.</p>
+
+<p> Nun braucht das Skript noch Ausführungsrechte, dann lässt es sich starten:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ chmod +x ./helloworld.php
+$ ./helloworld.php
+Hello World!
+EOT
+)?></code></pre>
+
+<p>Auf diese Weise lassen sich mit geringem Aufwand kleine Skripte für die Shell schreiben, aber auch größere Programme sind möglich (ab einer bestimmten Größe bietet sich eine native Sprache aber eher an). Dank CLI sind übrigens auch behelfsmäßige Konstrukte wie</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+0    0    *    *    *    wget http://myowndomain.example/script.php
+EOT
+)?></code></pre>
+
+<p>für die Ausführung lokaler PHP-Skripte via Cron überflüssig und sinnentstellt.</p>
+
+<p>Das ist aber bei weitem noch nicht alles. PHP kann nicht nur per CLI angesprochen werden, es kann auch von „innen“ heraus auf die Shell zugegriffen werden. Auch hier gilt wieder: möglich ist dies (bei deaktiviertem safe_mode) auf allen Plattformen, wirklich praktisch ist es nur unter unixoiden Systemen. An dieser Stelle soll nur <code><a href="http://de.php.net/shell_exec">shell_exec</a>()</code> behandelt werden, für eine komplette Liste der Funktionen zur Ausführung von Kommandos auf der Shell lohnt sich ein Blick ins <a href="http://de.php.net/manual/en/ref.exec.php">Manual</a>.</p>
+
+<p>Mit <code>shell_exec()</code> lassen sich Shell-Kommandos ausführen, deren Ausgabe dann zurück gegeben wird. So lassen sich sehr einfach Operationen ausführen, die sonst nur sehr umständlich über diverse PHP-Extensions möglich wären. Damit lässt sich übrigens auch ein Fallback bereitstellen, für den Fall, dass diese Extension nicht installiert ist. Letztendlich greifen diese Extensions auch nur auf die entsprechenden System-Bibliotheken zurück. Um z.B. eine Datei per bzip2 zu komprimieren, ließe sich diese per PHP zuerst einlesen und dann komprimiert in eine bz2-Datei speichern oder man führt einfach Folgendes aus:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+shell_exec('bzip2 ./file');  
+EOT
+)?></code></pre>
+
+<p>Sofern man nicht mit Daten arbeitet, die das PHP-Skript selbst generiert, ist der Zugriff auf die Shell oft einfacher. Im Gegenzug nimmt man sich damit aber auch ein Stück weit die Plattformunabhängigkeit. Soll das Skript also grundsätzlich auch auf Systemen wie Windows laufen, wäre der Weg über PHP-Extensions und entsprechende PEAR-Bibliotheken einfacher.</p>
+
+<p>Im Übrigen gibt es für die Ausführung von Shell-Kommandos auch einen eigenen Operator: den Backtick-Operator. Dieser ist an den Shell-eigenen Kommando-Substitutions-Operator angelehnt, der genauso aussieht und sich auch in etwa genauso verhält. Obiges Statement ist äquivalent zu:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$output = `bzip2 ./file`;
+EOT
+)?></code></pre>
+
+<p>Sehr praktisch.</p>
+
+<p>Es ist offensichtlich: PHP ist weit mehr als bloß eine Skriptsprache für Webanwendungen. Insbesondere auf UNIX-Systemen lässt sich noch deutlich mehr damit machen. PHP ist also auch für die systeminterne Programmierung durchaus attraktiv und in manchen Bereichen deutlich einfacher zu handhaben als beispielsweise herkömmlicher Bash-Code.</p>
+
+<p>Und weil es so schön ist, sei an dieser Stelle für diejenigen, die mehr über den effektiven Umgang mit der Shell lernen wollen, noch auf einen <a href="http://www.refining-linux.org/categories/10/Advent-calendar-2010/%22">weiteren Adventskalender</a> speziell zu diesem Thema verwiesen.</p>
+
+<p>Übrigens noch ein kleiner Tipp am Rande: Der Parameter <code>-w &lt;file&gt;</code> gibt den PHP-Code aus der Datei <var>&lt;file&gt;</var> minimiert zurück, es werden also Kommentare und Whitespace entfernt. Für PHP-Code selbst ergibt das nur in wenigen Fällen Sinn. Wegen der ähnlichen Syntax lässt sich diese Option aber auch nutzen, um schnell und einfach JavaScript-Dateien trafficsparend aufzubereiten. Voraussetzung ist allerdings ein PHP-Tag am Dateianfang. Da dieses nicht vorhanden ist, würde der Code 1:1 zurückgegeben werden. Um dies zu verhindern, kann das PHP-Tag aber temporär am Anfang eingefügt werden:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+$ (echo '<?php' ; cat myfile.js) | php -w | sed -e '1d'
+EOT
+)?></code></pre>
+
+<p>Für größere Projekte empfiehlt sich natürlich ein herkömmlicher JS-Minfier, aber für kleine Skripte ist diese Methode ganz praktisch. Der Shell-Code dazu lässt sich auch in eine Datei auslagern. Statt den Namen der JavaScript-Datei hartzucoden würde an der Stelle dann Die Variable <var>$1</var> stehen, die beim Aufruf des Skripts durch Übergabe des Dateinamens als Parameter befüllt würde.</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+#!/bin/sh
+(echo '<?php' ; cat $1) | php -w | sed -e '1d'
+EOT
+)?></code></pre>
+
+<p>Nach Setzen der Ausführungsrechte für die Datei erfolgt der Aufruf dann so:</p>
+
+<pre><code><?=$this->escape(<<<'EOT'
+./minify ./myfile.js
+EOT
+)?></code></pre>
+
+<p>Wobei <code>./minify</code> der Name des eben erstellten Skripts ist. Mit dem Ausgabeumleitungsoperator <code>&gt;</code> lässt sich die Ausgabe auch direkt in eine Datei umleiten.</p>
+
+<p>In dem Sinne: Happy coding!</p>
+
