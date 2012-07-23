@@ -17,6 +17,25 @@ a:visited {
 }
 */
 
-a:visited {
+a:link, a:active, a:hover, a:visited{
     color: FireBrick;
+}
+
+
+.wdb-sidenav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #eee;
+    width: 300px;
+    overflow: auto;
+}
+
+.wdb-sidenav ol {
+    font-size: 14px;
+}
+
+.wdb-content {
+    margin-left: 300px;
 }

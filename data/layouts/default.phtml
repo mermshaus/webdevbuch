@@ -2,6 +2,11 @@
 
 $p = $pathToRoot;
 
+$toc = array();
+
+$isIndexPage = ($title === 'Home – webdevbuch');
+
+
 ?><!DOCTYPE html>
 
 <html lang="en">
@@ -16,9 +21,90 @@ $p = $pathToRoot;
     </head>
 
     <body>
-        <? if ($title !== 'Home – webdevbuch') : ?>
+        <?php if (!$isIndexPage && false) : ?>
         <p><a href="<?=$p?>/index.html">← zum Index</a></p>
-        <? endif; ?>
+        <?php endif; ?>
+
+        <?php if (!$isIndexPage || true) : ?>
+        <div class="wdb-sidenav">
+            <ol>
+                <li><a href="<?=$p?>/einleitung.html">Einleitung</a>
+                    <ol>
+                        <li><a href="<?=$p?>/einleitung.html#client-server">Client und Server</a></li>
+                        <li><a href="<?=$p?>/einleitung.html#http">Das HTTP-Protokoll</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/html.html">HTML</a>
+                    <ol>
+                        <li><a href="<?=$p?>/html.html#semantik">Was ist Semantik?</a></li>
+                        <li><a href="<?=$p?>/html.html#version">Welche HTML-Version?</a></li>
+                        <li><a href="<?=$p?>/html.html#html5">HTML5</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/css.html">CSS</a>
+                    <ol>
+                        <li><a href="<?=$p?>/css.html#reset">Das Reset-Stylesheet</a></li>
+                        <li><a href="<?=$p?>/css.html#techniken">Wichtige CSS-Techniken</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/javascript.html">JavaScript</a>
+                    <ol>
+                        <li><a href="<?=$p?>/javascript.html#empfehlungen">Empfehlungen</a></li>
+                        <li><a href="<?=$p?>/javascript.html#ressourcen">Ressourcen</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/php.html">PHP</a>
+                    <ol>
+                        <li><a href="<?=$p?>/php.html#debugging">Debugging</a></li>
+                        <li><a href="<?=$p?>/php.html#fehlerbehandlung">Fehlerbehandlung</a></li>
+                        <li><a href="<?=$p?>/php.html#di">Dependency Injection</a></li>
+                        <li><a href="<?=$p?>/php.html#helper">Helper Class</a></li>
+                        <li><a href="<?=$p?>/php.html#unit-testing">Unit-Testing</a></li>
+                        <li><a href="<?=$p?>/php.html#mvc">MVC</a></li>
+                        <li><a href="<?=$p?>/php.html#ressourcen">Ressourcen</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/sql.html">SQL</a>
+                    <ol>
+                        <li><a href="<?=$p?>/sql.html#joins">Joins</a></li>
+                        <li><a href="<?=$p?>/sql.html#ressourcen">Ressourcen</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/regex.html">Regex</a>
+                    <ol>
+                        <li><a href="<?=$p?>/regex.html#knackig">Kurz und knackig</a></li>
+                        <li><a href="<?=$p?>/regex.html#tipps">Tipps</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/design.html">Design</a>
+                    <ol>
+                        <li><a href="<?=$p?>/design.html#typographie">Typographie</a></li>
+                        <li><a href="<?=$p?>/design.html#ressourcen">Ressourcen</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/toolchain.html">Toolchain</a>
+                    <ol>
+                        <li><a href="<?=$p?>/toolchain.html#editor">Welcher Editor?</a></li>
+                        <li><a href="<?=$p?>/toolchain.html#scm">Versionsverwaltung</a></li>
+                    </ol>
+                </li>
+                <li><a href="<?=$p?>/sonstiges.html">Sonstiges</a>
+                    <ol>
+                        <li><a href="<?=$p?>/sonstiges.html#standardantworten">Standardantworten</a></li>
+                        <li><a href="<?=$p?>/sonstiges.html#wichtig">Wichtig</a></li>
+                        <li><a href="<?=$p?>/sonstiges.html#organisatorisches">Organisatorisches</a></li>
+                        <li><a href="<?=$p?>/sonstiges.html#andere-faqs">Andere FAQs</a></li>
+                        <li><a href="<?=$p?>/sonstiges.html#i18n">Internationalisierung</a></li>
+                        <li><a href="<?=$p?>/sonstiges.html#sicherheit">Sicherheit von Webanwendungen</a></li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!$isIndexPage || true) : ?>
+        <div class="wdb-content">
+        <?php endif; ?>
 
         <?= $content ?>
 
@@ -36,6 +122,10 @@ $p = $pathToRoot;
         <p class="c"><a href="http://validator.w3.org/check?uri=referer">Diese Seite validieren</a>.</p>
 
         <p class="c">Diese Seite wurde erstellt am: <?=date('Y-m-d H:i:s')?>. <a href="https://github.com/mermshaus/webdevbuch">Mitmachen</a>?</p>
+
+        <?php if (!$isIndexPage || true) : ?>
+        </div>
+        <?php endif; ?>
     </body>
 
 </html>
