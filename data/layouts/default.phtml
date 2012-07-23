@@ -27,7 +27,8 @@ $isIndexPage = ($title === 'Home – webdevbuch');
 
         <?php if (!$isIndexPage || true) : ?>
         <div class="wdb-sidenav">
-            <ol>
+            <ol start="0">
+                <li><a href="<?=$p?>/index.html">Startseite</a></li>
                 <li><a href="<?=$p?>/einleitung.html">Einleitung</a>
                     <ol>
                         <li><a href="<?=$p?>/einleitung.html#client-server">Client und Server</a></li>
@@ -121,7 +122,7 @@ $isIndexPage = ($title === 'Home – webdevbuch');
 
         <p class="c"><a href="http://validator.w3.org/check?uri=referer">Diese Seite validieren</a>.</p>
 
-        <p class="c">Diese Seite wurde erstellt am: <?=date('Y-m-d H:i:s')?>. <a href="https://github.com/mermshaus/webdevbuch">Mitmachen</a>?</p>
+        <p class="c">Diese Seite wurde erstellt am: <?=date('Y-m-d H:i:s')?> UTC. <a href="https://github.com/mermshaus/webdevbuch">Mitmachen</a>?</p>
 
         <?php if (!$isIndexPage || true) : ?>
         </div>
