@@ -1,0 +1,32 @@
+<?php
+
+$this->setTitle('FAQ - Kontextwechsel');
+
+?>
+
+<h1>Kontextwechsel</h1>
+
+<p>Es gibt bei der Arbeit mit Datenbanken und HTML-Ausgaben zwei Stellen, an denen Eingaben aus einem Kontext (etwa ein PHP-String) in einen anderen Kontext (HTML-Code, SQL-Code) übertragen werden. Bei jeder Übertragung müssen dabei die speziellen syntaktischen Regeln des jeweiligen Ziel-Kontexts beachtet werden. So haben etwa die Zeichen &lt;, &gt;, &amp;, &quot;, &#39; eine spezielle Bedeutung im Rahmen von HTML und die Zeichen &quot;, &#39; im Rahmen von SQL.</p>
+
+<p>Wenn nun Inhalte aus einem PHP-String in HTML- oder SQL-Syntax eingefügt werden, muss die spezielle Bedeutung dieser Zeichen berücksichtigt werden. Ansonsten können Fehler auftreten, weil die jeweilig erzeugte HTML- oder SQL-Syntax nicht mehr korrekt ist. Außerdem eröffnen sich Möglichkeiten für XSS- respektive SQL-Injection-Angriffe, bei denen durch geschickt gewählte Eingaben die resultierende HTML- oder SQL-Syntax auf eine Weise verändert wird, die zu sicherheitskritischen Effekten führt.</p>
+
+<ul>
+<li>http://wiki.selfhtml.org/wiki/Artikel:Kontextwechsel</li>
+<li>https://de.wikipedia.org/wiki/Cross-Site-Scripting</li>
+<li>https://de.wikipedia.org/wiki/SQL-Injection</li>
+</ul>
+
+<p>Abhilfe schafft in beiden Fällen das sogenannte Escaping. Das ist ein Vorgang, bei dem eine Eingabe so aufbereitet wird, dass die oben als problematisch eingestuften Zeichen jeweils auf eine Weise verändert werden, die die syntaktische Bedeutung durch eine rein inhaltliche ersetzt. In HTML wird beispielsweise durch Escaping das Zeichen &lt; zu &amp;lt;. Die Sequenz &amp;lt; bedeutet ebenso „kleiner als“, kann aber nicht mehr dazu verwendet werden, einen neuen HTML-Tag zu beginnen, da dies einzig dem Zeichen &lt; vorbehalten ist. In SQL wird ganz ähnlich beispielsweise das Zeichen &quot; zu \&quot;. Während ein einzelnes &quot; einen geöffneten String innerhalb der SQL-Syntax schließen würde, repräsentiert \&quot; lediglich ein syntaktisch bedeutungsloses Anführungszeichen.</p>
+
+<p>Die Verantwortung des Entwicklers ist es, die korrekte Form von Escaping immer dann durchzuführen, wenn Daten in einen anderen Kontext übertragen werden. Dazu dienen hinsichtlich der Übertragung in HTML-Syntax die Funktionen <code>htmlspecialchars</code> (empfohlen) und <code>htmlentities</code>. Funktionen wie <code>strip_tags</code> erfüllen dagegen nicht die notwendigen Anforderungen. Im Bereich der SQL-Syntax stellt jeder Datenbankadapter (mysqli, PDO, pg, …) einen geeigneten Escaping-Mechanismus bereit (<code>mysqli_real_escape_string</code>, <code>PDO::quote</code>/Prepared Statements, <code>pg_escape_string</code>, …). Hier ist zu beachten, dass ausschließlich der Mechanismus des jeweiligen Adapters genutzt werden darf. Eine allgemeine Funktion wie <code>addslashes</code> ist nicht ausreichend.</p>
+
+<p>Entsprechendes Escaping sollte tatsächlich ausnahmslos immer vorgenommen werden. Gedanken wie „Dieser Wert kann nur Buchstaben enthalten, also brauche ich nicht zu escapen“ sind einerseits zu kompliziert, weil es kognitiven Aufwands bedarf, das beim späteren Lesen des Codes wieder zu vergegenwärtigen, und sind andererseits ein potenzielles Risiko, denn möglicherweise wird in Zukunft jemand die derzeit gültige Beschränkung auf Buchstaben aufheben, aber nicht daran denken, den Code entsprechend anzupassen.</p>
+
+
+
+<h2>Ergänzung zu <code>strip_tags</code></h2>
+
+<p><code>strip_tags</code> bietet kein vollständiges Escaping, da etwa &amp; nicht zu &amp;amp; umgewandelt wird. Escaping ist nicht der Zweck der Funktion, sondern das Herausfiltern von Tags. Das ist eine höhere Spezialisierung, die zudem auch nicht immer erwünscht ist. Beispielsweise könnte beabsichtigt sein, in einem Artikel zu schreiben: „Der HTML-Tag &lt;a&gt; dient dazu, Links zu setzen.“ <code>strip_tags</code> macht daraus: „Der HTML-Tag&nbsp;&nbsp;dient dazu, Links zu setzen.“ „Passiver” HTML-Code ist prinzipiell in vielen Fällen keine falsche oder unerwünschte Eingabe.</p>
+
+<p><code>strip_tags</code> ist außerdem nicht unbedingt eine Funktion des Ausgabebereichs, sondern sollte beim Entgegennehmen von Eingaben im Kontext von Filterung und Validierung eingesetzt werden, um Daten etwa vor dem Einfügen in eine Datenbank zu bereinigen oder zurückzuweisen.</p>
+

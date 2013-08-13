@@ -1,0 +1,50 @@
+@import url('../normalize.css');
+
+.wdb-sidenav {
+    float: left;
+    background: #eee;
+    width: 300px;
+}
+
+.wdb-sidenav ol {
+    font-size: 14px;
+}
+
+.wdb-content {
+    margin-left: 300px;
+    padding: 20px;
+}
+
+body {
+    font-family: Georgia;
+    font-size: 17px;
+    line-height: 140%;
+}
+
+
+pre {
+    font-size: 12px;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+    padding: 0.8em;
+}
+
+p.a {
+    display: none;
+}
+
+footer {
+    padding: 50px 0;
+    font-size: 0.75em;
+    text-align: center;
+}
+
+
+.wdb-faq-page {
+    padding: 3em;
+}
+
+.wdb-faq-content {
+    max-width: 50em;
+    margin: 0 auto;
+}

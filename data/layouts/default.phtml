@@ -6,6 +6,12 @@ $toc = array();
 
 $isIndexPage = ($title === 'Home – webdevbuch');
 
+//$style = 'dih5';
+$style = 'clean';
+
+if (strpos($title, 'FAQ') === 0) {
+    include __DIR__ . '/faq.phtml'; return;
+}
 
 ?><!DOCTYPE html>
 
@@ -14,9 +20,7 @@ $isIndexPage = ($title === 'Home – webdevbuch');
     <head>
         <meta charset="UTF-8" />
         <title><?=$this->escape($title)?></title>
-        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/normalize.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/dih5.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/overrides.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="<?=$p?>/styles/<?=$style?>/screen.css" />
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     </head>
 
@@ -111,6 +115,8 @@ $isIndexPage = ($title === 'Home – webdevbuch');
 
         <p class="a">&#x2767;</p>
 
+        <footer>
+
         <p class="c">Dieses Dokument steht unter der <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA-3.0-Lizenz</a>.<br />
         Alle Mitwirkenden sind <a href="<?=$p?>/mitwirkende.html">hier</a> aufgeführt.<br />
         Der Ansprechpartner ist <a href="http://www.ermshaus.org/contact">Marc Ermshaus</a>.</p>
@@ -123,6 +129,8 @@ $isIndexPage = ($title === 'Home – webdevbuch');
         <p class="c"><a href="http://validator.w3.org/check?uri=referer">Diese Seite validieren</a>.</p>
 
         <p class="c">Diese Seite wurde erstellt am: <?=date('Y-m-d H:i:s')?> UTC. <a href="https://github.com/mermshaus/webdevbuch">Mitmachen</a>?</p>
+
+        </footer>
 
         <?php if (!$isIndexPage || true) : ?>
         </div>

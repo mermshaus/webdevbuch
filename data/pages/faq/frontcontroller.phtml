@@ -1,0 +1,32 @@
+<?php
+
+$this->setTitle('FAQ - Front Controller');
+
+?>
+
+<h1>Front Controller</h1>
+
+<p>Weiß nicht, ob das hier relevant ist (sorry, falls nicht), aber da wir hier in letzter Zeit wieder mehrere solcher Themen haben, habe ich es noch mal rausgesucht. Mehrere bekannte PHP-Frameworks beschränken sich auf diese simplen Rewrite-Regeln:</p>
+
+<pre><code>RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]</code></pre>
+
+<p><a href="http://silex.sensiolabs.org/doc/web_servers.html">http://silex.sensiolabs.org/doc/web_servers.html</a></p>
+
+<pre><code>RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]</code></pre>
+
+<p><a href="http://framework.zend.com/manual/1.12/en/project-structure.rewrite.html">http://framework.zend.com/manual/1.1...e.rewrite.html</a></p>
+
+<p>Das heißt grob: „Wenn ein URL nicht auf eine existierende Datei weist, leite zu index.php um.“</p>
+
+<p>In index.php wird dann $_SERVER['REQUEST_URI'] analysiert, um zu ermitteln, was zurückgeliefert werden soll.</p>
+
+<p>Das hat die Eigenschaft, dass alle Routing-Logik hübsch im PHP-Code gehalten werden kann, was ich um Längen einfacher finde als der ewige Kampf mit mod_rewrite.</p>
+
+<p>Flexibler ist das in jedem Fall auch, denn die Anwendung ist weniger stark an den Webserver gebunden.</p>

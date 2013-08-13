@@ -1,0 +1,76 @@
+<?php
+
+$this->setTitle('FAQ - Zeichensatz');
+
+?>
+
+<h1>Zeichensätze</h1>
+
+<p>Das wird jetzt ein sehr dichter Info-Dump, aber das ist wichtig, weil ihr sonst über Jahre ständig mit so was die eigenartigsten Probleme haben werdet, weil euch nicht alle Fakten bekannt sind. (Ich spreche aus Erfahrung.) Ihr müsst das (und die Inhalte der verlinkten Seiten) nicht alles im Detail auf Anhieb verstehen, aber ihr solltet euch zumindest merken, dass es diese Dinge gibt und dass die eine Rolle spielen.</p>
+
+<p>Die Seite wird derzeit mit dem Charset ISO-8859-1 ausgeliefert, <em>nicht</em> mit ISO-8859-6. Ein serverseitiger Header überschreibt die Meta-Angabe. Das kann etwa mit einem Tool wie diesem eingesehen werden:</p>
+
+<p>- <a href="http://validator.w3.org/i18n-checker/check?uri=umar1190.funpic.de%2Fhadhit%2Fhadithepage.php#validate-by-uri+">W3C I18n Checker</a> („HTTP Content-Type“ steht weiter oben als „Meta tag“.)</p>
+
+<p>Auch zum Beispiel im Firefox unter <em>Rechtsklick in die Seite → View Page Info → General-Tab → Encoding</em>. (Habe nur die englische Variante, aber das findet ihr schon.)</p>
+
+<p>Was dort steht, ist das <em>tatsächliche</em> Encoding, in dem die Daten vom Browser interpretiert werden. Das ist nicht zwingend das, von dem ihr <em>glaubt</em>, dass ihr es angegeben habt. Erklärung dazu siehe unter anderem hier:</p>
+
+<blockquote>
+<p>In the case of conflict between multiple encoding declarations, precedence rules apply to determine which declaration wins out. For XHTML and HTML, the precedence is as follows, with 1 being the highest.</p>
+<ol>
+<li>HTTP Content-Type header</li>
+<li>byte-order mark (BOM)</li>
+<li>XML declaration</li>
+<li>meta element</li>
+<li>link charset attribute</li>
+</ol>
+</blockquote>
+
+<p>Was der Server schickt, ist Punkt 1 auf der Liste (höchste Priorität), das meta-Element ist lediglich an vierter Position, wird also überschrieben, <em>wenn</em> der Server eine eigene Angabe mitschickt.</p>
+
+<p>Da nicht alle Server (Apache, ISS, nginx, lighttpd, …) so konfiguriert sind, <em>dass sie überhaupt eine Angabe verschicken</em>, wird das Thema so unübersichtlich. Auf dem einen Webspace mit der einen Serverkonfiguration könnte etwa die Angabe aus dem meta-Element die entscheidende sein (weil der Server selbst keine setzt), auf dem anderen das, was der Server standardmäßig mitschickt.</p>
+
+<p>Kurz am Rande: Weil ihr alle aufmerksam gelesen habt und euch jetzt fragt, was eine BOM ist: <a href="http://de.wikipedia.org/wiki/Byte_Order_Mark">Byte Order Mark</a> (Die Punkte 3 und 5 <a href="http://xhtmlforum.de/519307-post7.html">der Liste</a> könnt ihr aber vergessen. Für wen die relevant sind, der weiß das.)</p>
+
+<p>Also: Was im Dokument an meta-Angaben steht, ist dem Server im Zweifel egal. Es hat Vorrang, was der Server im Header mitschickt.</p>
+
+
+<?php /* Müsste man nochmal durchgucken:
+
+[center]* * *[/center]
+
+Das war die eine Sache. Jetzt zu [url=http://de.wikipedia.org/wiki/ISO_8859-6]ISO-8859-6[/url]: Die Idee war gut, aber hier ist das derzeit [I]wirkungslos[/I], weil die arabischen Schriftzeichen als numerische Entitäten in den Quelltext eingefügt werden. Das heißt, sie können komplett in [url=http://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/ASCII_Code_Chart.svg/800px-ASCII_Code_Chart.svg.png]7-Bit-ASCII[/url] (= ASCII-7) kodiert werden (als Folge [I]&#<Zahl>;[/I]). Anders gesagt: Es werden nur die ersten 128 Zeichen des Zeichensatzes genutzt. Das ist im Wikipedia-Artikel die obere Hälfte der Tabelle (alles bis einschließlich Byte 7F). Das entspricht einerseits exakt ASCII-7 und ist andererseits [I]bei allen Zeichensätzen der ISO-8859-Familie identisch[/I]. Die ISO-8859-Familie ist komplett abwärtskompatibel zu ASCII-7. Jedes Zeichen aus ASCII-7 wird in ISO-8859-Zeichensätzen binär identisch kodiert.
+
+Ein weiterer Zeichensatz, der binär identisch zu ASCII-7 ist, ist UTF-8. UTF-8 hat aber den Vorteil, nicht wie die ISO-8859-Zeichensätze auf einen Umfang von maximal 256 Zeichen begrenzt zu sein. Einfach gesagt ist UTF-8 überhaupt nicht begrenzt, sondern kann – ohne Rückgriff auf numerische Entitäten – jedes Zeichen aus allen Schriftsystemen der Welt kodieren. Diese Eigenschaft macht UTF-8 zum überlegenen Zeichensatz für sozusagen jeden Anwendungsfall.
+
+Kurz gesagt: Nutzt UTF-8 für so was. Immer. Keine Ausreden.
+
+Da hier PHP genutzt wird, gibt es auch einen einfachen Weg, den Server dazu zu bringen, UTF-8 als Zeichenkodierung von höchster Priorität zu senden:
+
+[php]header('Content-Type: text/html; charset=UTF-8');[/php]
+
+Diese Zeile muss vor der ersten Ausgabe an den Browser (echo, print, HTML-Codeabschnitt, …) eingefügt werden. Sie setzt die Content-Type-Information, die der Server mitschickt.
+
+(Ein zusätzliches meta-Element [i]<meta http-equiv="content-type" content="text/html; charset=UTF-8">[/i] kann nicht schaden, spielt aber bei normaler Auslieferung über das Web keine Rolle. Es wird zum Beispiel dann wichtig, wenn die Seite lokal auf den eigenen Rechner heruntergeladen und von dort aus im Browser geöffnet wird. In diesem Fall gibt es keinen Server, der Header senden könnte, weshalb das meta-Element die entscheidende Angabe ist.)
+
+Also: Seiten im Encoding UTF-8 ausliefern.
+
+[center]* * *[/center]
+
+Fehlt noch ein wichtiger Aspekt: Es ergibt keinen Sinn, eine Zeichenkette (wie zum Beispiel eine HTML- oder PHP-Datei) zu haben, ohne zu wissen, in welchem Zeichensatz (ASCII-7, ISO-8859-1, UTF-8, …) sie kodiert ist.
+
+Den letzten Satz habe ich aus dieser Darstellung geklaut:
+
+- [url=http://www.joelonsoftware.com/articles/Unicode.html]The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!) - Joel on Software[/url] (Mir ist leider keine Übersetzung bekannt.)
+
+Der Artikel erklärt all das, was ich hier zu UTF-8 und Zeichensätzen schreibe, noch mal wesentlich ausführlicher und anschaulicher. Ist [I]sehr[/I] lesenswert.
+
+Hier geht es mir darum, dass auch Quellcode-Dateien, die ihr auf der Festplatte speichert, immer in einem Zeichensatz kodiert sind. Ich weiß nicht, welche Editoren ihr nutzt, aber in einem guten Editor lässt sich das einstellen. Es ist immens vorteilhaft, auch alle Quellcode-Dateien (PHP, HTML, CSS, …) im UTF-8-Zeichensatz ([I]ohne[/I] BOM, falls wählbar) zu kodieren. Wenn eure Seiten vom Server als UTF-8 ausgeliefert werden und ihr die Seiten in UTF-8 erstellt, könnt ihr (bis auf Zeichen wie &, <, >, …) völlig auf HTML-Entitäten (&auml;, &#1614, …) verzichten und direkt das gewünschte Zeichen im Code notieren. (Dabei ist es natürlich von Vorteil, wenn die im Editor genutzte Schriftart die Zeichen auch darstellen kann.)
+
+Also: Quellcode ebenfalls in UTF-8 kodieren.
+
+[indent]* * *[/indent]
+
+Ob das den tatsächlichen Fehler auf der gezeigten Seite behebt, kann ich nicht sagen. */
+?>

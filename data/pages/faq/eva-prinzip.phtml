@@ -1,0 +1,30 @@
+<?php
+
+$this->setTitle('FAQ - EVA-Prinzip');
+
+?>
+
+<h1>EVA-Prinzip</h1>
+
+<p>Besser: Single-Responsibility-Principle.</p>
+
+<p>Das EVA-Prinzip steht für die Unterteilung eines Programmablaufs in die drei Schritte Eingabe (E), Verarbeitung (V) und Ausgabe (A). Während der Eingabe werden alle Daten entgegengenommen, die im Verarbeitungsteil benötigt werden, um schließlich eine Ausgabe zurückzuliefern.</p>
+
+<p>Auf diese Weise kann jedes Programm insgesamt schematisch als eine Funktion angesehen werden, die anhand von Eingabeparametern eine Ausgabe generiert.</p>
+
+<pre><code>Programm := function (Eingabe) {
+                // Verarbeitung
+                return Ausgabe;
+            }</code></pre>
+
+<p>Der Hauptaspekt des Prinzips ist die Unterscheidung der drei Schritte. Sie folgt der Annahme, dass ein Programm eine konkrete Aufgabe nur dann durchführen oder überhaupt bestimmen kann, wenn alle Eingaben vorliegen. Zudem kann es erst dann entscheiden, welche Ausgabe generiert werden muss, wenn das Resultat der Verarbeitung feststeht.</p>
+
+<p>Ein Beispiel: Dem Programm P wird eine Eingabe zeichenweise übergeben. Die Eingabe besteht aus einer Folge von Buchstaben A-Za-z und zuletzt einer Ziffer 0 oder 1 (etwa: <code>"faqEol1"</code>). Das Programm hat diese drei Aufgaben:</p>
+
+<ol>
+  <li>Stelle sicher, dass die Eingabe tatsächlich nur aus Kleinbuchstaben a-z und einer Ziffer 0 oder 1 besteht. Falls nein, gib eine Fehlermeldung aus.</li>
+  <li>Ist die Ziffer zum Schluss 1, forme die Eingabe in Großbuchstaben um.</li>
+  <li>Gib alle Buchstaben (gegebenenfalls umgeformt) in entgegengesetzter Reihenfolge der Eingabe aus.</li>
+</ol>
+
+<p>Da vom letzten Zeichen der Eingabe abhängt, auf welche Weise die Buchstaben behandelt werden müssen, kann die Verarbeitung erst dann beginnen, wenn alle Zeichen eingelesen sind.</p>
